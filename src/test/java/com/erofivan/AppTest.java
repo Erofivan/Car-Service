@@ -1,4 +1,4 @@
-package org.example;
+package com.erofivan;
 
 import org.junit.jupiter.api.Test;
 

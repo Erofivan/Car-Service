@@ -1,1 +1,8 @@
 rootProject.name = 'java-template'
+include 'domain'
+include 'infrastructure'
+include 'presentation'
+include 'application'
+include 'application:core'
+include 'application:contracts'
+include 'application:abstractions'

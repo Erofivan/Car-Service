@@ -72,3 +72,8 @@ test {
         events 'passed', 'skipped', 'failed'
     }
 }
+
+allprojects {
+    group = 'com.erofivan'
+    version = '1.0-SNAPSHOT'
+}

@@ -1,4 +1,4 @@
-package org.example;
+package com.erofivan;
 
 public final class App {
     private App() {
