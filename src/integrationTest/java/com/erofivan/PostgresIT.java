@@ -27,6 +27,8 @@ class PostgresIT {
         .withDatabaseName("testdb")
         .withUsername("test")
         .withPassword("test");
+    @Autowired
+    private DataSource dataSource;
 
     @DynamicPropertySource
     static void configureProperties(DynamicPropertyRegistry registry) {
@@ -34,9 +36,6 @@ class PostgresIT {
         registry.add("spring.datasource.username", postgres::getUsername);
         registry.add("spring.datasource.password", postgres::getPassword);
     }
-
-    @Autowired
-    private DataSource dataSource;
 
     @Test
     void liquibaseMigrationsApplied() throws Exception {

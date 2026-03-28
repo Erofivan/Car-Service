@@ -1,15 +1,15 @@
 spring:
-  datasource:
-    url: jdbc:postgresql://${TEST_DB_HOST:localhost}:${TEST_DB_PORT:5432}/${TEST_DB_NAME:testdb}
-    username: ${TEST_DB_USERNAME:test}
-    password: ${TEST_DB_PASSWORD:test}
-  jpa:
-    hibernate:
-      ddl-auto: validate
-    open-in-view: false
-  liquibase:
-    change-log: classpath:db/changelog/db.changelog-master.yaml
+    datasource:
+        url: jdbc:postgresql://${TEST_DB_HOST:localhost}:${TEST_DB_PORT:5432}/${TEST_DB_NAME:testdb}
+        username: ${TEST_DB_USERNAME:test}
+        password: ${TEST_DB_PASSWORD:test}
+    jpa:
+        hibernate:
+            ddl-auto: validate
+        open-in-view: false
+    liquibase:
+        change-log: classpath:db/changelog/db.changelog-master.yaml
 
 springdoc:
-  api-docs:
-    enabled: false
+    api-docs:
+        enabled: false
