@@ -6,14 +6,12 @@ import com.erofivan.application.contracts.cars.operations.GetCar;
 import com.erofivan.application.contracts.cars.operations.ListCars;
 import com.erofivan.application.core.mappings.CarMappings;
 import com.erofivan.domain.common.ids.CarId;
+import lombok.AllArgsConstructor;
 
+@AllArgsConstructor
 public final class CarService implements CarServiceContract {
     private final IPersistenceContext context;
-
-    public CarService(IPersistenceContext context) {
-        this.context = context;
-    }
-
+    
     @Override
     public ListCars.Response listCars(ListCars.Request request) {
         return new ListCars.Success(context.cars().query(request.query()).stream().map(CarMappings::toDto).toList());

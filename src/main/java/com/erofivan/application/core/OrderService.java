@@ -14,17 +14,13 @@ import com.erofivan.domain.orders.custom.CustomOrder;
 import com.erofivan.domain.orders.custom.CustomOrderCore;
 import com.erofivan.domain.orders.inventory.InventoryOrder;
 import com.erofivan.domain.orders.inventory.InventoryOrderCore;
+import lombok.AllArgsConstructor;
 
+@AllArgsConstructor
 public final class OrderService implements OrderServiceContract {
     private final IPersistenceContext context;
     private final ManagerAssignmentService managerAssignmentService;
     private final ModelDirectory modelDirectory;
-
-    public OrderService(IPersistenceContext context, ManagerAssignmentService managerAssignmentService, ModelDirectory modelDirectory) {
-        this.context = context;
-        this.managerAssignmentService = managerAssignmentService;
-        this.modelDirectory = modelDirectory;
-    }
 
     @Override
     public PlaceInventoryOrder.Response placeInventoryOrder(PlaceInventoryOrder.Request request) {

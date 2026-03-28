@@ -9,14 +9,12 @@ import com.erofivan.domain.common.ids.TestDriveRequestId;
 import com.erofivan.domain.common.ids.UserId;
 import com.erofivan.domain.testdrives.TestDriveRequest;
 import com.erofivan.domain.testdrives.TestDriveSlot;
+import lombok.AllArgsConstructor;
 
+@AllArgsConstructor
 public final class TestDriveService implements TestDriveServiceContract {
     private final IPersistenceContext context;
-
-    public TestDriveService(IPersistenceContext context) {
-        this.context = context;
-    }
-
+    
     @Override
     public ScheduleTestDrive.Response schedule(ScheduleTestDrive.Request request) {
         try {

@@ -6,13 +6,11 @@ import com.erofivan.application.core.mappings.ConfigurationMappings;
 import com.erofivan.domain.cars.CarModel;
 import com.erofivan.domain.configurations.CarConfiguration;
 import com.erofivan.domain.configurations.CarConfigurator;
+import lombok.AllArgsConstructor;
 
+@AllArgsConstructor
 public final class ConfigurationService implements ConfigurationServiceContract {
     private final ModelDirectory modelDirectory;
-
-    public ConfigurationService(ModelDirectory modelDirectory) {
-        this.modelDirectory = modelDirectory;
-    }
 
     @Override
     public BuildConfiguration.Response buildConfiguration(BuildConfiguration.Request request) {
