@@ -1,0 +1,25 @@
+package com.erofivan.application.core;
+
+import com.erofivan.infrastructure.persistence.jpa.model.PartJpaEntity;
+import com.erofivan.infrastructure.persistence.jpa.repositories.PartJpaRepository;
+import com.erofivan.presentation.dto.PartResponse;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+@Service
+@RequiredArgsConstructor
+public class PartCatalogService {
+    private final PartJpaRepository partRepository;
+
+    public List<PartResponse> listParts() {
+        return partRepository.findByRemovedFalse().stream()
+            .map(this::toResponse)
+            .toList();
+    }
+
+    private PartResponse toResponse(PartJpaEntity entity) {
+        return new PartResponse(entity.getId(), entity.getName(), entity.getDescription(), entity.getPrice());
+    }
+}

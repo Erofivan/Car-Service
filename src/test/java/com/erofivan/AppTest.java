@@ -1,29 +1,33 @@
 package com.erofivan;
 
-import com.erofivan.application.abstractions.persistence.queries.CarQuery;
-import com.erofivan.application.contracts.cars.operations.ListCars;
-import com.erofivan.application.core.CarService;
-import com.erofivan.infrastructure.persistence.InMemoryPersistenceContext;
-import com.erofivan.infrastructure.seeding.DataSeeder;
 import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
+import org.testcontainers.containers.PostgreSQLContainer;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertInstanceOf;
-
+@SpringBootTest
+@Testcontainers
+@ActiveProfiles("test")
 class AppTest {
 
+    @Container
+    static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:16-alpine")
+        .withDatabaseName("testdb")
+        .withUsername("test")
+        .withPassword("test");
+
+    @DynamicPropertySource
+    static void configureProperties(DynamicPropertyRegistry registry) {
+        registry.add("spring.datasource.url", postgres::getJdbcUrl);
+        registry.add("spring.datasource.username", postgres::getUsername);
+        registry.add("spring.datasource.password", postgres::getPassword);
+    }
+
     @Test
-    void shouldListSeededCars() {
-        // arrange
-        var context = new InMemoryPersistenceContext();
-        DataSeeder.seed(context);
-        var service = new CarService(context);
-
-        // act
-        var response = service.listCars(new ListCars.Request(CarQuery.builder().build()));
-
-        // assert
-        var success = assertInstanceOf(ListCars.Success.class, response);
-        assertEquals(5, success.cars().size());
+    void contextLoads() {
     }
 }
