@@ -12,12 +12,14 @@ import com.erofivan.application.contracts.testdrives.TestDriveServiceContract;
 import com.erofivan.application.contracts.testdrives.operations.ScheduleTestDrive;
 import com.erofivan.domain.common.ids.CarId;
 import com.erofivan.domain.common.ids.UserId;
+import lombok.AllArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.logging.Logger;
 
+@AllArgsConstructor
 public final class ClientController {
     private static final Logger LOGGER = Logger.getLogger(ClientController.class.getName());
 
@@ -25,18 +27,6 @@ public final class ClientController {
     private final ConfigurationServiceContract configurationService;
     private final OrderServiceContract orderService;
     private final TestDriveServiceContract testDriveService;
-
-    public ClientController(
-        CarServiceContract carService,
-        ConfigurationServiceContract configurationService,
-        OrderServiceContract orderService,
-        TestDriveServiceContract testDriveService
-    ) {
-        this.carService = carService;
-        this.configurationService = configurationService;
-        this.orderService = orderService;
-        this.testDriveService = testDriveService;
-    }
 
     public void run(UserId clientId, CarId demoCarId) {
         LOGGER.info("Client: list cars");

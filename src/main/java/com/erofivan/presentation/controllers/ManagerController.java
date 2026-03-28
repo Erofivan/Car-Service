@@ -2,17 +2,15 @@ package com.erofivan.presentation.controllers;
 
 import com.erofivan.application.abstractions.persistence.IPersistenceContext;
 import com.erofivan.application.abstractions.persistence.queries.OrderQuery;
+import lombok.AllArgsConstructor;
 
 import java.util.logging.Logger;
 
+@AllArgsConstructor
 public final class ManagerController {
     private static final Logger LOGGER = Logger.getLogger(ManagerController.class.getName());
 
     private final IPersistenceContext context;
-
-    public ManagerController(IPersistenceContext context) {
-        this.context = context;
-    }
 
     public void run() {
         LOGGER.info("Manager: process inventory orders");
