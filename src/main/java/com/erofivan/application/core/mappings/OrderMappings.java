@@ -11,11 +11,11 @@ public final class OrderMappings {
 
     public static InventoryOrderDto toDto(InventoryOrder order) {
         return new InventoryOrderDto(
-                order.id().toString(),
-                order.clientId().toString(),
-                order.managerId().toString(),
-                order.carId().toString(),
-                order.status()
+            order.id().toString(),
+            order.clientId().toString(),
+            order.managerId().toString(),
+            order.carId().toString(),
+            order.status()
         );
     }
 
@@ -25,12 +25,12 @@ public final class OrderMappings {
 
     public static CustomOrderDto toDto(CustomOrder order, long totalPrice) {
         return new CustomOrderDto(
-                order.id().toString(),
-                order.clientId().toString(),
-                order.managerId().toString(),
-                order.modelCode(),
-                order.status(),
-                totalPrice
+            order.id().toString(),
+            order.clientId().toString(),
+            order.managerId().toString(),
+            order.modelCode(),
+            order.status(),
+            totalPrice
         );
     }
 }

@@ -1,6 +1,6 @@
 services:
-	app:
-		build:
-			context: ..
-			dockerfile: docker/Dockerfile
-		container_name: erofivan-app
+    app:
+        build:
+            context: ..
+            dockerfile: docker/Dockerfile
+        container_name: erofivan-app

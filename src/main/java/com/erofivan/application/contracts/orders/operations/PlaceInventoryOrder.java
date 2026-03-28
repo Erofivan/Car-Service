@@ -6,10 +6,10 @@ public final class PlaceInventoryOrder {
     private PlaceInventoryOrder() {
     }
 
-    public record Request(String clientId, String carId) {
+    public sealed interface Response permits Success, Failed {
     }
 
-    public sealed interface Response permits Success, Failed {
+    public record Request(String clientId, String carId) {
     }
 
     public record Success(InventoryOrderDto order) implements Response {

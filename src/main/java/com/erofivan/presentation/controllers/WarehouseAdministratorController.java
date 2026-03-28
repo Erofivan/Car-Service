@@ -23,11 +23,11 @@ public final class WarehouseAdministratorController {
 
         LOGGER.info("Warehouse: process custom orders");
         context.customOrders().query(OrderQuery.builder().status("PLACED").build())
-                .forEach(order -> {
-                    order.tryApproveByWarehouse();
-                    order.tryMoveToAwaitingPayment();
-                    context.customOrders().update(order);
-                    LOGGER.info("- custom order moved to: " + order.status());
-                });
+            .forEach(order -> {
+                order.tryApproveByWarehouse();
+                order.tryMoveToAwaitingPayment();
+                context.customOrders().update(order);
+                LOGGER.info("- custom order moved to: " + order.status());
+            });
     }
 }

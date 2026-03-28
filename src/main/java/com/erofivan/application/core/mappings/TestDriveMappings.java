@@ -9,10 +9,10 @@ public final class TestDriveMappings {
 
     public static TestDriveRequestDto toDto(TestDriveRequest request) {
         return new TestDriveRequestDto(
-                request.id().toString(),
-                request.clientId().toString(),
-                request.carId().toString(),
-                request.slot().startsAt()
+            request.id().toString(),
+            request.clientId().toString(),
+            request.carId().toString(),
+            request.slot().startsAt()
         );
     }
 }

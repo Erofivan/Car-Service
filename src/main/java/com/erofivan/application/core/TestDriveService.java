@@ -35,12 +35,13 @@ public final class TestDriveService implements TestDriveServiceContract {
             }
 
             TestDriveRequest testDriveRequest = TestDriveRequest.of(
-                    TestDriveRequestId.generate(),
-                    clientId,
-                    carId,
-                    TestDriveSlot.of(request.startsAt())
+                TestDriveRequestId.generate(),
+                clientId,
+                carId,
+                TestDriveSlot.of(request.startsAt())
             );
             context.testDrives().add(testDriveRequest);
+
             return new ScheduleTestDrive.Success(TestDriveMappings.toDto(testDriveRequest));
         } catch (RuntimeException exception) {
             return new ScheduleTestDrive.Failed(exception.getMessage());

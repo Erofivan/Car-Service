@@ -11,7 +11,7 @@ public record CarConfiguration(String modelCode, Map<String, ComponentOption> se
 
     public Money totalSurcharge() {
         return selectedOptions.values().stream()
-                .map(ComponentOption::surcharge)
-                .reduce(Money.zero(), Money::add);
+            .map(ComponentOption::surcharge)
+            .reduce(Money.zero(), Money::add);
     }
 }

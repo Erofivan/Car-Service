@@ -41,7 +41,7 @@ public final class InMemoryPartRepository implements PartRepository {
 
         String nameLike = query.getNameLike().toLowerCase();
         return storage.values().stream()
-                .filter(part -> part.getName().toLowerCase().contains(nameLike))
-                .toList();
+            .filter(part -> part.getName().toLowerCase().contains(nameLike))
+            .toList();
     }
 }

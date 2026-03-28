@@ -15,18 +15,18 @@ class OrderServiceTest {
 
     @Test
     void shouldPlaceInventoryOrderAndReserveCar() {
-    // arrange
+        // arrange
         var context = new InMemoryPersistenceContext();
         var seed = DataSeeder.seed(context);
         var service = new OrderService(context, new ManagerAssignmentService(), new ModelDirectory());
 
-    // act
+        // act
         var response = service.placeInventoryOrder(new PlaceInventoryOrder.Request(
-                seed.demoClientId().toString(),
-                seed.demoCarId().toString()
+            seed.demoClientId().toString(),
+            seed.demoCarId().toString()
         ));
 
-    // assert
+        // assert
         assertInstanceOf(PlaceInventoryOrder.Success.class, response);
         var car = context.cars().findById(seed.demoCarId());
         assertTrue(car.isPresent());
@@ -35,39 +35,39 @@ class OrderServiceTest {
 
     @Test
     void shouldReturnFailedWhenClientNotFound() {
-    // arrange
+        // arrange
         var context = new InMemoryPersistenceContext();
         var seed = DataSeeder.seed(context);
         var service = new OrderService(context, new ManagerAssignmentService(), new ModelDirectory());
 
-    // act
+        // act
         var response = service.placeInventoryOrder(new PlaceInventoryOrder.Request(
-                UUID.randomUUID().toString(),
-                seed.demoCarId().toString()
+            UUID.randomUUID().toString(),
+            seed.demoCarId().toString()
         ));
 
-    // assert
+        // assert
         assertInstanceOf(PlaceInventoryOrder.Failed.class, response);
     }
 
     @Test
     void shouldReturnFailedWhenCarIsAlreadyReserved() {
-    // arrange
+        // arrange
         var context = new InMemoryPersistenceContext();
         var seed = DataSeeder.seed(context);
         var service = new OrderService(context, new ManagerAssignmentService(), new ModelDirectory());
         service.placeInventoryOrder(new PlaceInventoryOrder.Request(
-                seed.demoClientId().toString(),
-                seed.demoCarId().toString()
+            seed.demoClientId().toString(),
+            seed.demoCarId().toString()
         ));
 
-    // act
+        // act
         var response = service.placeInventoryOrder(new PlaceInventoryOrder.Request(
-                seed.demoClientId().toString(),
-                seed.demoCarId().toString()
+            seed.demoClientId().toString(),
+            seed.demoCarId().toString()
         ));
 
-    // assert
+        // assert
         var failed = assertInstanceOf(PlaceInventoryOrder.Failed.class, response);
         assertTrue(failed.message().contains("not available"));
     }

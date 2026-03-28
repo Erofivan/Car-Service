@@ -16,12 +16,13 @@ public final class ConfigurationMappings {
             .collect(Collectors.toMap(Map.Entry::getKey, entry -> entry.getValue().name()));
         long basePrice = spec.basePrice().value();
         long surcharge = configuration.totalSurcharge().value();
+
         return new ConfigurationDto(
             configuration.modelCode(),
-                selectedOptions,
-                basePrice,
-                surcharge,
-                basePrice + surcharge
+            selectedOptions,
+            basePrice,
+            surcharge,
+            basePrice + surcharge
         );
     }
 }

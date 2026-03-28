@@ -18,18 +18,18 @@ class OrderFlowIT {
 
     @Test
     void shouldPlaceInventoryOrderThroughRealContext() {
-    // arrange
+        // arrange
         var context = new InMemoryPersistenceContext();
         var seed = DataSeeder.seed(context);
         var service = new OrderService(context, new ManagerAssignmentService(), new ModelDirectory());
 
-    // act
+        // act
         var response = service.placeInventoryOrder(new PlaceInventoryOrder.Request(
-                seed.demoClientId().toString(),
-                seed.demoCarId().toString()
+            seed.demoClientId().toString(),
+            seed.demoCarId().toString()
         ));
 
-    // assert
+        // assert
         assertInstanceOf(PlaceInventoryOrder.Success.class, response);
         assertEquals(1, context.inventoryOrders().query(OrderQuery.builder().build()).size());
         var car = context.cars().findById(seed.demoCarId());

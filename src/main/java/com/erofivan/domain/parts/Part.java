@@ -8,9 +8,9 @@ import lombok.Getter;
 public final class Part {
     private final PartId id;
     private final String name;
+    private final PartCompatibility compatibility;
     private String description;
     private Money price;
-    private final PartCompatibility compatibility;
 
     public Part(PartId id, String name, String description, Money price, PartCompatibility compatibility) {
         this.id = id;

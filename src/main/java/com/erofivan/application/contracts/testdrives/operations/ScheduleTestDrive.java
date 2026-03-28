@@ -8,10 +8,10 @@ public final class ScheduleTestDrive {
     private ScheduleTestDrive() {
     }
 
-    public record Request(String clientId, String carId, LocalDateTime startsAt) {
+    public sealed interface Response permits Success, Failed {
     }
 
-    public sealed interface Response permits Success, Failed {
+    public record Request(String clientId, String carId, LocalDateTime startsAt) {
     }
 
     public record Success(TestDriveRequestDto request) implements Response {

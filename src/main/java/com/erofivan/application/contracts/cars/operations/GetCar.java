@@ -6,10 +6,10 @@ public final class GetCar {
     private GetCar() {
     }
 
-    public record Request(String carId) {
+    public sealed interface Response permits Success, NotFound {
     }
 
-    public sealed interface Response permits Success, NotFound {
+    public record Request(String carId) {
     }
 
     public record Success(CarDto car) implements Response {

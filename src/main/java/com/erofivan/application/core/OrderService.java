@@ -44,14 +44,16 @@ public final class OrderService implements OrderServiceContract {
             }
 
             var order = new InventoryOrder(new InventoryOrderCore(
-                    OrderId.generate(),
-                    clientId,
-                    managerAssignmentService.assign(context),
-                    carId
+                OrderId.generate(),
+                clientId,
+                managerAssignmentService.assign(context),
+                carId
             ));
+
             car.setAvailable(false);
             context.cars().update(car);
             context.inventoryOrders().add(order);
+
             return new PlaceInventoryOrder.Success(OrderMappings.toDto(order));
         } catch (RuntimeException exception) {
             return new PlaceInventoryOrder.Failed(exception.getMessage());
@@ -72,11 +74,11 @@ public final class OrderService implements OrderServiceContract {
             CarConfiguration configuration = configurator.build();
 
             var order = new CustomOrder(new CustomOrderCore(
-                    OrderId.generate(),
-                    clientId,
-                    managerAssignmentService.assign(context),
-                    model.code(),
-                    configuration
+                OrderId.generate(),
+                clientId,
+                managerAssignmentService.assign(context),
+                model.code(),
+                configuration
             ));
             context.customOrders().add(order);
             long totalPrice = model.spec().basePrice().value() + configuration.totalSurcharge().value();

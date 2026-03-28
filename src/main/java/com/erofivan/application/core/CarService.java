@@ -22,7 +22,7 @@ public final class CarService implements CarServiceContract {
     @Override
     public GetCar.Response getCar(GetCar.Request request) {
         return context.cars().findById(CarId.from(request.carId()))
-                .<GetCar.Response>map(car -> new GetCar.Success(CarMappings.toDto(car)))
-                .orElseGet(() -> new GetCar.NotFound("Car not found"));
+            .<GetCar.Response>map(car -> new GetCar.Success(CarMappings.toDto(car)))
+            .orElseGet(() -> new GetCar.NotFound("Car not found"));
     }
 }

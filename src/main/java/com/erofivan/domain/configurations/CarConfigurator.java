@@ -17,13 +17,13 @@ public final class CarConfigurator {
     public void select(String slotName, String optionName) {
         ComponentSlot slot = modelSpec.slots().stream()
             .filter(item -> item.slotName().equals(slotName))
-                .findFirst()
-                .orElseThrow(() -> new MissingRequiredSlotException(slotName));
+            .findFirst()
+            .orElseThrow(() -> new MissingRequiredSlotException(slotName));
 
         ComponentOption option = slot.allOptions().stream()
             .filter(item -> item.name().equals(optionName))
-                .findFirst()
-                .orElseThrow(() -> new IncompatibleComponentException(optionName, modelSpec.modelCode()));
+            .findFirst()
+            .orElseThrow(() -> new IncompatibleComponentException(optionName, modelSpec.modelCode()));
 
         if (!option.isCompatibleWith(modelSpec.modelCode())) {
             throw new IncompatibleComponentException(option.name(), modelSpec.modelCode());

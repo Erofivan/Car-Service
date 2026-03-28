@@ -27,10 +27,10 @@ public final class ClientController {
     private final TestDriveServiceContract testDriveService;
 
     public ClientController(
-            CarServiceContract carService,
-            ConfigurationServiceContract configurationService,
-            OrderServiceContract orderService,
-            TestDriveServiceContract testDriveService
+        CarServiceContract carService,
+        ConfigurationServiceContract configurationService,
+        OrderServiceContract orderService,
+        TestDriveServiceContract testDriveService
     ) {
         this.carService = carService;
         this.configurationService = configurationService;
@@ -53,7 +53,7 @@ public final class ClientController {
 
         LOGGER.info("Client: place inventory order");
         var inventoryResponse = orderService.placeInventoryOrder(
-                new PlaceInventoryOrder.Request(clientId.toString(), demoCarId.toString())
+            new PlaceInventoryOrder.Request(clientId.toString(), demoCarId.toString())
         );
         if (inventoryResponse instanceof PlaceInventoryOrder.Success success) {
             LOGGER.info("Inventory order placed: " + success.order().id());
@@ -66,7 +66,7 @@ public final class ClientController {
         options.put("Steering wheel", "M-Sport heated");
         options.put("Interior", "Leather Dakota");
         var customResponse = orderService.placeCustomOrder(
-                new PlaceCustomOrder.Request(clientId.toString(), "BMW-320I", options)
+            new PlaceCustomOrder.Request(clientId.toString(), "BMW-320I", options)
         );
         if (customResponse instanceof PlaceCustomOrder.Success success) {
             LOGGER.info("Custom order placed: " + success.order().id() + " total=" + success.order().totalPrice());
@@ -74,9 +74,9 @@ public final class ClientController {
 
         LOGGER.info("Client: schedule test drive");
         var testDriveResponse = testDriveService.schedule(new ScheduleTestDrive.Request(
-                clientId.toString(),
-                demoCarId.toString(),
-                LocalDateTime.now().plusDays(1)
+            clientId.toString(),
+            demoCarId.toString(),
+            LocalDateTime.now().plusDays(1)
         ));
         if (testDriveResponse instanceof ScheduleTestDrive.Success success) {
             LOGGER.info("Test drive request created: " + success.request().id());

@@ -31,9 +31,9 @@ public final class InMemoryInventoryOrderRepository implements InventoryOrderRep
     @Override
     public List<InventoryOrder> query(OrderQuery query) {
         return storage.values().stream()
-                .filter(order -> query.getClientId() == null || order.clientId().toString().equals(query.getClientId()))
-                .filter(order -> query.getManagerId() == null || order.managerId().toString().equals(query.getManagerId()))
-                .filter(order -> query.getStatus() == null || order.status().equalsIgnoreCase(query.getStatus()))
-                .toList();
+            .filter(order -> query.getClientId() == null || order.clientId().toString().equals(query.getClientId()))
+            .filter(order -> query.getManagerId() == null || order.managerId().toString().equals(query.getManagerId()))
+            .filter(order -> query.getStatus() == null || order.status().equalsIgnoreCase(query.getStatus()))
+            .toList();
     }
 }

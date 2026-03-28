@@ -9,10 +9,10 @@ public final class CarMappings {
 
     public static CarDto toDto(Car car) {
         return new CarDto(
-                car.getId().toString(),
-                car.getModel().brand().displayName(),
-                car.getModel().name(),
-                car.getModel().code(),
+            car.getId().toString(),
+            car.getModel().brand().displayName(),
+            car.getModel().name(),
+            car.getModel().code(),
             car.getVisualSpec().bodyType().displayName(),
             car.getStaticSpec().engine().fuelType().displayName(),
             car.getStaticSpec().engine().power().horsePower(),
@@ -21,8 +21,8 @@ public final class CarMappings {
             car.getStaticSpec().drivetrainType().displayName(),
             car.getVisualSpec().color().displayName(),
             car.getPrice().value(),
-                car.isAvailable(),
-                car.isTestDriveEnabled()
+            car.isAvailable(),
+            car.isTestDriveEnabled()
         );
     }
 }

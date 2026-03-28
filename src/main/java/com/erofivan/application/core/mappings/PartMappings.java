@@ -9,10 +9,10 @@ public final class PartMappings {
 
     public static PartDto toDto(Part part) {
         return new PartDto(
-                part.getId().toString(),
-                part.getName(),
-                part.getDescription(),
-                part.getPrice().value()
+            part.getId().toString(),
+            part.getName(),
+            part.getDescription(),
+            part.getPrice().value()
         );
     }
 }

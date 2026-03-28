@@ -21,9 +21,9 @@ class PostgresIT {
     static void setUp() {
         assumeTrue(isDockerAvailable(), "Docker is not available, skipping test");
         postgres = new PostgreSQLContainer<>("postgres:16-alpine")
-                .withDatabaseName("testdb")
-                .withUsername("test")
-                .withPassword("test");
+            .withDatabaseName("testdb")
+            .withUsername("test")
+            .withPassword("test");
         postgres.start();
     }
 
@@ -46,9 +46,9 @@ class PostgresIT {
     @Test
     void canConnectAndQuery() throws Exception {
         try (Connection connection = DriverManager.getConnection(
-                postgres.getJdbcUrl(),
-                postgres.getUsername(),
-                postgres.getPassword())) {
+            postgres.getJdbcUrl(),
+            postgres.getUsername(),
+            postgres.getPassword())) {
             ResultSet rs = connection.createStatement().executeQuery("select 1");
             rs.next();
             assertEquals(1, rs.getInt(1));

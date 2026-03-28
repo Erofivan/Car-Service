@@ -8,20 +8,20 @@ import lombok.Getter;
 public final class Car {
     private final CarId id;
     private final CarModel model;
-    private final CarStaticSpec staticSpec;
-    private CarVisualSpec visualSpec;
+    private final CarSpec staticSpec;
+    private CarModifications visualSpec;
     private Money price;
     private boolean available;
     private boolean testDriveEnabled;
 
     public Car(
-            CarId id,
-            CarModel model,
-            CarStaticSpec staticSpec,
-            CarVisualSpec visualSpec,
-            Money price,
-            boolean available,
-            boolean testDriveEnabled
+        CarId id,
+        CarModel model,
+        CarSpec staticSpec,
+        CarModifications visualSpec,
+        Money price,
+        boolean available,
+        boolean testDriveEnabled
     ) {
         this.id = id;
         this.model = model;
@@ -36,7 +36,7 @@ public final class Car {
         this.price = newPrice;
     }
 
-    public void updateVisualSpec(CarVisualSpec newVisualSpec) {
+    public void updateVisualSpec(CarModifications newVisualSpec) {
         this.visualSpec = newVisualSpec;
     }
 

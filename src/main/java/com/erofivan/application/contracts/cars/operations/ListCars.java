@@ -9,10 +9,10 @@ public final class ListCars {
     private ListCars() {
     }
 
-    public record Request(CarQuery query) {
+    public sealed interface Response permits Success {
     }
 
-    public sealed interface Response permits Success {
+    public record Request(CarQuery query) {
     }
 
     public record Success(List<CarDto> cars) implements Response {

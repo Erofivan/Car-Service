@@ -8,10 +8,10 @@ public final class PlaceCustomOrder {
     private PlaceCustomOrder() {
     }
 
-    public record Request(String clientId, String modelCode, Map<String, String> selectedOptions) {
+    public sealed interface Response permits Success, Failed {
     }
 
-    public sealed interface Response permits Success, Failed {
+    public record Request(String clientId, String modelCode, Map<String, String> selectedOptions) {
     }
 
     public record Success(CustomOrderDto order) implements Response {

@@ -12,18 +12,18 @@ import java.util.List;
 
 public final class ModelDirectory {
     private final List<CarModel> models = List.of(
-            new Bmw320iModel(),
-            new Bmw330iModel(),
-            new BmwM340iModel(),
-            new AudiA4Model(),
-            new MercedesE300Model()
+        new Bmw320iModel(),
+        new Bmw330iModel(),
+        new BmwM340iModel(),
+        new AudiA4Model(),
+        new MercedesE300Model()
     );
 
     public CarModel resolve(String modelCode) {
         return models.stream()
-                .filter(model -> model.code().equals(modelCode))
-                .findFirst()
-                .orElseThrow(() -> new EntityNotFoundException("CarModel", modelCode));
+            .filter(model -> model.code().equals(modelCode))
+            .findFirst()
+            .orElseThrow(() -> new EntityNotFoundException("CarModel", modelCode));
     }
 
     public List<CarModel> all() {

@@ -2,8 +2,8 @@ package com.erofivan.infrastructure.seeding;
 
 import com.erofivan.application.abstractions.persistence.IPersistenceContext;
 import com.erofivan.domain.cars.Car;
-import com.erofivan.domain.cars.CarStaticSpec;
-import com.erofivan.domain.cars.CarVisualSpec;
+import com.erofivan.domain.cars.CarModifications;
+import com.erofivan.domain.cars.CarSpec;
 import com.erofivan.domain.cars.bodytypes.SedanBodyType;
 import com.erofivan.domain.cars.brands.audi.models.audia4.AudiA4Model;
 import com.erofivan.domain.cars.brands.bmw.models.bmw320i.Bmw320iModel;
@@ -51,90 +51,90 @@ public final class DataSeeder {
         context.users().addSystemAdministrator(new SystemAdministrator(UserId.generate(), "System Admin"));
 
         Car firstCar = new Car(
-                CarId.generate(),
-                new Bmw320iModel(),
-                new CarStaticSpec(
-                        Engine.of(new PetrolFuelType(), EnginePower.of(184), EngineVolume.of(2.0)),
-                        new AutomaticTransmissionType(),
-                        new RearWheelDriveType()
-                ),
-                new CarVisualSpec(new SedanBodyType(), new BlackColor()),
-                Money.of(4_100_000L),
-                true,
-                true
+            CarId.generate(),
+            new Bmw320iModel(),
+            new CarSpec(
+                Engine.of(new PetrolFuelType(), EnginePower.of(184), EngineVolume.of(2.0)),
+                new AutomaticTransmissionType(),
+                new RearWheelDriveType()
+            ),
+            new CarModifications(new SedanBodyType(), new BlackColor()),
+            Money.of(4_100_000L),
+            true,
+            true
         );
 
         context.cars().add(firstCar);
         context.cars().add(new Car(
-                CarId.generate(),
-                new Bmw330iModel(),
-                new CarStaticSpec(
-                        Engine.of(new PetrolFuelType(), EnginePower.of(258), EngineVolume.of(2.0)),
-                        new AutomaticTransmissionType(),
-                        new RearWheelDriveType()
-                ),
-                new CarVisualSpec(new SedanBodyType(), new GrayColor()),
-                Money.of(4_800_000L),
-                true,
-                true
+            CarId.generate(),
+            new Bmw330iModel(),
+            new CarSpec(
+                Engine.of(new PetrolFuelType(), EnginePower.of(258), EngineVolume.of(2.0)),
+                new AutomaticTransmissionType(),
+                new RearWheelDriveType()
+            ),
+            new CarModifications(new SedanBodyType(), new GrayColor()),
+            Money.of(4_800_000L),
+            true,
+            true
         ));
 
         context.cars().add(new Car(
-                CarId.generate(),
-                new BmwM340iModel(),
-                new CarStaticSpec(
-                        Engine.of(new PetrolFuelType(), EnginePower.of(387), EngineVolume.of(3.0)),
-                        new AutomaticTransmissionType(),
-                        new AllWheelDriveType()
-                ),
-                new CarVisualSpec(new SedanBodyType(), new BlueColor()),
-                Money.of(6_150_000L),
-                true,
-                true
+            CarId.generate(),
+            new BmwM340iModel(),
+            new CarSpec(
+                Engine.of(new PetrolFuelType(), EnginePower.of(387), EngineVolume.of(3.0)),
+                new AutomaticTransmissionType(),
+                new AllWheelDriveType()
+            ),
+            new CarModifications(new SedanBodyType(), new BlueColor()),
+            Money.of(6_150_000L),
+            true,
+            true
         ));
 
         context.cars().add(new Car(
-                CarId.generate(),
-                new AudiA4Model(),
-                new CarStaticSpec(
-                        Engine.of(new DieselFuelType(), EnginePower.of(190), EngineVolume.of(2.0)),
-                        new AutomaticTransmissionType(),
-                        new FrontWheelDriveType()
-                ),
-                new CarVisualSpec(new SedanBodyType(), new WhiteColor()),
-                Money.of(3_950_000L),
-                true,
-                true
+            CarId.generate(),
+            new AudiA4Model(),
+            new CarSpec(
+                Engine.of(new DieselFuelType(), EnginePower.of(190), EngineVolume.of(2.0)),
+                new AutomaticTransmissionType(),
+                new FrontWheelDriveType()
+            ),
+            new CarModifications(new SedanBodyType(), new WhiteColor()),
+            Money.of(3_950_000L),
+            true,
+            true
         ));
 
         context.cars().add(new Car(
-                CarId.generate(),
-                new MercedesE300Model(),
-                new CarStaticSpec(
-                        Engine.of(new PetrolFuelType(), EnginePower.of(258), EngineVolume.of(2.0)),
-                        new AutomaticTransmissionType(),
-                        new RearWheelDriveType()
-                ),
-                new CarVisualSpec(new SedanBodyType(), new BlackColor()),
-                Money.of(5_100_000L),
-                true,
-                true
+            CarId.generate(),
+            new MercedesE300Model(),
+            new CarSpec(
+                Engine.of(new PetrolFuelType(), EnginePower.of(258), EngineVolume.of(2.0)),
+                new AutomaticTransmissionType(),
+                new RearWheelDriveType()
+            ),
+            new CarModifications(new SedanBodyType(), new BlackColor()),
+            Money.of(5_100_000L),
+            true,
+            true
         ));
 
         context.parts().add(new Part(
-                PartId.generate(),
-                "Brake Pads",
-                "Front axle performance brake pads",
-                Money.of(28_000L),
-                PartCompatibility.of(Set.of("BMW-320I", "BMW-330I", "BMW-M340I"))
+            PartId.generate(),
+            "Brake Pads",
+            "Front axle performance brake pads",
+            Money.of(28_000L),
+            PartCompatibility.of(Set.of("BMW-320I", "BMW-330I", "BMW-M340I"))
         ));
 
         context.parts().add(new Part(
-                PartId.generate(),
-                "Cabin Air Filter",
-                "Activated carbon filter",
-                Money.of(9_500L),
-                PartCompatibility.of(Set.of("BMW-320I", "AUDI-A4", "MERCEDES-E300"))
+            PartId.generate(),
+            "Cabin Air Filter",
+            "Activated carbon filter",
+            Money.of(9_500L),
+            PartCompatibility.of(Set.of("BMW-320I", "AUDI-A4", "MERCEDES-E300"))
         ));
 
         return new SeedData(clientId, firstCar.getId());

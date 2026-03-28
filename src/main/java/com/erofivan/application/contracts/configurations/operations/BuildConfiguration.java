@@ -6,10 +6,10 @@ public final class BuildConfiguration {
     private BuildConfiguration() {
     }
 
-    public record Request(String modelCode) {
+    public sealed interface Response permits Success, Failed {
     }
 
-    public sealed interface Response permits Success, Failed {
+    public record Request(String modelCode) {
     }
 
     public record Success(ConfigurationDto configuration) implements Response {

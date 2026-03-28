@@ -17,11 +17,11 @@ public final class ManagerController {
     public void run() {
         LOGGER.info("Manager: process inventory orders");
         context.inventoryOrders().query(OrderQuery.builder().status("PLACED").build())
-                .forEach(order -> {
-                    order.tryApproveByManager();
-                    order.tryMoveToAwaitingPayment();
-                    context.inventoryOrders().update(order);
-                    LOGGER.info("- inventory order moved to: " + order.status());
-                });
+            .forEach(order -> {
+                order.tryApproveByManager();
+                order.tryMoveToAwaitingPayment();
+                context.inventoryOrders().update(order);
+                LOGGER.info("- inventory order moved to: " + order.status());
+            });
     }
 }
