@@ -9,15 +9,6 @@
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
-            <option value="$PROJECT_DIR$/application" />
-            <option value="$PROJECT_DIR$/application/abstractions" />
-            <option value="$PROJECT_DIR$/application/contracts" />
-            <option value="$PROJECT_DIR$/application/core" />
-            <option value="$PROJECT_DIR$/domain" />
-            <option value="$PROJECT_DIR$/domain/models" />
-            <option value="$PROJECT_DIR$/domain/services" />
-            <option value="$PROJECT_DIR$/infrastructure" />
-            <option value="$PROJECT_DIR$/presentation" />
           </set>
         </option>
       </GradleProjectSettings>
