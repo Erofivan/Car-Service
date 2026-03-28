@@ -1,9 +1,10 @@
 plugins {
     id 'java'
     id 'idea'
+    id 'application'
 }
 
-group = 'org.example'
+group = 'com.erofivan'
 version = '1.0-SNAPSHOT'
 
 java {
@@ -16,18 +17,22 @@ repositories {
     mavenCentral()
 }
 
-dependencies {
-    testImplementation platform('org.junit:junit-bom:5.10.0')
-    testImplementation 'org.junit.jupiter:junit-jupiter'
-    testImplementation 'org.testcontainers:junit-jupiter:1.19.7'
-    testImplementation 'org.testcontainers:postgresql:1.19.7'
-    testImplementation 'org.postgresql:postgresql:42.7.4'
-    testRuntimeOnly 'org.slf4j:slf4j-simple:2.0.13'
+application {
+    mainClass = 'com.erofivan.App'
 }
 
-configurations {
-    integrationTestImplementation.extendsFrom testImplementation
-    integrationTestRuntimeOnly.extendsFrom testRuntimeOnly
+dependencies {
+    compileOnly 'org.projectlombok:lombok:1.18.36'
+    annotationProcessor 'org.projectlombok:lombok:1.18.36'
+
+    testImplementation platform('org.junit:junit-bom:5.10.0')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+    testCompileOnly 'org.projectlombok:lombok:1.18.36'
+    testAnnotationProcessor 'org.projectlombok:lombok:1.18.36'
+    testImplementation 'org.testcontainers:junit-jupiter:1.20.4'
+    testImplementation 'org.testcontainers:postgresql:1.20.4'
+    testImplementation 'org.postgresql:postgresql:42.7.4'
+    testRuntimeOnly 'org.slf4j:slf4j-simple:2.0.13'
 }
 
 sourceSets {
@@ -37,6 +42,11 @@ sourceSets {
         compileClasspath += sourceSets.main.output + configurations.testRuntimeClasspath
         runtimeClasspath += output + compileClasspath
     }
+}
+
+configurations {
+    integrationTestImplementation.extendsFrom testImplementation
+    integrationTestRuntimeOnly.extendsFrom testRuntimeOnly
 }
 
 idea {
@@ -53,6 +63,13 @@ tasks.register('integrationTest', Test) {
     classpath = sourceSets.integrationTest.runtimeClasspath
     useJUnitPlatform()
     shouldRunAfter test
+
+    def dockerSocket = new File(System.getProperty('user.home'), '.docker/run/docker.sock')
+    if (dockerSocket.exists()) {
+        environment 'DOCKER_HOST', "unix://${dockerSocket.absolutePath}"
+        environment 'TESTCONTAINERS_DOCKER_SOCKET_OVERRIDE', '/var/run/docker.sock'
+    }
+
     testLogging {
         events 'passed', 'skipped', 'failed'
     }
@@ -66,6 +83,20 @@ tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8'
 }
 
+tasks.register('runApp', JavaExec) {
+    description = 'Runs com.erofivan.App'
+    group = 'application'
+    dependsOn tasks.named('classes')
+    classpath = sourceSets.main.runtimeClasspath
+    mainClass = 'com.erofivan.App'
+}
+
+tasks.register('com.erofivan.App.main') {
+    description = 'Compatibility alias for running com.erofivan.App'
+    group = 'application'
+    dependsOn tasks.named('runApp')
+}
+
 test {
     useJUnitPlatform()
     testLogging {
@@ -76,4 +107,13 @@ test {
 allprojects {
     group = 'com.erofivan'
     version = '1.0-SNAPSHOT'
+
+    apply plugin: 'checkstyle'
+
+    checkstyle {
+        toolVersion = '10.14.2'
+        maxWarnings = 0
+        maxErrors = 0
+        configFile = rootProject.file("config/checkstyle/checkstyle.xml")
+    }
 }

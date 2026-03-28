@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="GradleMigrationSettings" migrationVersion="1" />
   <component name="GradleSettings">
     <option name="linkedExternalProjectsSettings">
       <GradleProjectSettings>
@@ -13,6 +14,8 @@
             <option value="$PROJECT_DIR$/application/contracts" />
             <option value="$PROJECT_DIR$/application/core" />
             <option value="$PROJECT_DIR$/domain" />
+            <option value="$PROJECT_DIR$/domain/models" />
+            <option value="$PROJECT_DIR$/domain/services" />
             <option value="$PROJECT_DIR$/infrastructure" />
             <option value="$PROJECT_DIR$/presentation" />
           </set>
