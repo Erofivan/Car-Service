@@ -8,9 +8,9 @@ COPY src src
 COPY config config
 
 RUN chmod +x gradlew \
-	&& ./gradlew --no-daemon clean installDist \
+	&& ./gradlew --no-daemon clean bootJar \
 		-x test \
-#		-x integrationTest \
+		-x integrationTest \
 		-x checkstyleMain \
 		-x checkstyleTest \
 		-x checkstyleIntegrationTest
@@ -18,6 +18,10 @@ RUN chmod +x gradlew \
 FROM eclipse-temurin:21-jre
 WORKDIR /app
 
-COPY --from=build /workspace/build/install/java-template /app/
+RUN addgroup --system appgroup && adduser --system --ingroup appgroup appuser
 
-ENTRYPOINT ["/app/bin/java-template"]
+COPY --from=build /workspace/build/libs/*.jar app.jar
+
+USER appuser
+
+ENTRYPOINT ["java", "-jar", "/app/app.jar"]

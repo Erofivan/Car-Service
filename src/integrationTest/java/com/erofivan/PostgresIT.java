@@ -1,57 +1,61 @@
 package com.erofivan;
 
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.testcontainers.DockerClientFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.containers.PostgreSQLContainer;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
 
+import javax.sql.DataSource;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.ResultSet;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assumptions.assumeTrue;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
+@SpringBootTest
+@Testcontainers
+@ActiveProfiles("test")
 class PostgresIT {
 
-    static PostgreSQLContainer<?> postgres;
+    @Container
+    static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:16-alpine")
+        .withDatabaseName("testdb")
+        .withUsername("test")
+        .withPassword("test");
+    @Autowired
+    private DataSource dataSource;
 
-    @BeforeAll
-    static void setUp() {
-        assumeTrue(isDockerAvailable(), "Docker is not available, skipping test");
-        postgres = new PostgreSQLContainer<>("postgres:16-alpine")
-            .withDatabaseName("testdb")
-            .withUsername("test")
-            .withPassword("test");
-        postgres.start();
+    @DynamicPropertySource
+    static void configureProperties(DynamicPropertyRegistry registry) {
+        registry.add("spring.datasource.url", postgres::getJdbcUrl);
+        registry.add("spring.datasource.username", postgres::getUsername);
+        registry.add("spring.datasource.password", postgres::getPassword);
     }
 
-    @AfterAll
-    static void tearDown() {
-        if (postgres != null) {
-            postgres.stop();
-        }
-    }
-
-    private static boolean isDockerAvailable() {
-        try {
-            DockerClientFactory.instance().client();
-            return true;
-        } catch (Exception e) {
-            return false;
+    @Test
+    void liquibaseMigrationsApplied() throws Exception {
+        try (Connection conn = dataSource.getConnection()) {
+            ResultSet rs = conn.createStatement().executeQuery(
+                "SELECT count(*) FROM brands WHERE removed = FALSE"
+            );
+            rs.next();
+            assertEquals(3, rs.getInt(1));
         }
     }
 
     @Test
-    void canConnectAndQuery() throws Exception {
-        try (Connection connection = DriverManager.getConnection(
-            postgres.getJdbcUrl(),
-            postgres.getUsername(),
-            postgres.getPassword())) {
-            ResultSet rs = connection.createStatement().executeQuery("select 1");
+    void seedDataPresent() throws Exception {
+        try (Connection conn = dataSource.getConnection()) {
+            ResultSet rs = conn.createStatement().executeQuery(
+                "SELECT count(*) FROM cars WHERE removed = FALSE"
+            );
             rs.next();
-            assertEquals(1, rs.getInt(1));
+            assertTrue(rs.getInt(1) >= 3);
         }
     }
 }
