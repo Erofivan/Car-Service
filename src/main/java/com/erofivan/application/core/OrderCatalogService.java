@@ -6,11 +6,11 @@ import com.erofivan.infrastructure.persistence.jpa.model.CustomOrderEntity;
 import com.erofivan.infrastructure.persistence.jpa.model.InventoryOrderEntity;
 import com.erofivan.infrastructure.persistence.jpa.model.ModelEntity;
 import com.erofivan.infrastructure.persistence.jpa.model.UserEntity;
-import com.erofivan.infrastructure.persistence.jpa.repositories.CarJpaRepository;
-import com.erofivan.infrastructure.persistence.jpa.repositories.CustomOrderJpaRepository;
-import com.erofivan.infrastructure.persistence.jpa.repositories.InventoryOrderJpaRepository;
-import com.erofivan.infrastructure.persistence.jpa.repositories.ModelJpaRepository;
-import com.erofivan.infrastructure.persistence.jpa.repositories.UserJpaRepository;
+import com.erofivan.infrastructure.persistence.jpa.repositories.CarRepository;
+import com.erofivan.infrastructure.persistence.jpa.repositories.CustomOrderRepository;
+import com.erofivan.infrastructure.persistence.jpa.repositories.InventoryOrderRepository;
+import com.erofivan.infrastructure.persistence.jpa.repositories.ModelRepository;
+import com.erofivan.infrastructure.persistence.jpa.repositories.UserRepository;
 import com.erofivan.presentation.dto.CustomOrderResponse;
 import com.erofivan.presentation.dto.InventoryOrderResponse;
 import com.erofivan.presentation.dto.PlaceCustomOrderRequest;
@@ -25,11 +25,11 @@ import java.util.concurrent.ThreadLocalRandom;
 @Service
 @RequiredArgsConstructor
 public class OrderCatalogService {
-    private final CarJpaRepository carRepository;
-    private final UserJpaRepository userRepository;
-    private final ModelJpaRepository modelRepository;
-    private final InventoryOrderJpaRepository inventoryOrderRepository;
-    private final CustomOrderJpaRepository customOrderRepository;
+    private final CarRepository carRepository;
+    private final UserRepository userRepository;
+    private final ModelRepository modelRepository;
+    private final InventoryOrderRepository inventoryOrderRepository;
+    private final CustomOrderRepository customOrderRepository;
 
     @Transactional
     public InventoryOrderResponse placeInventoryOrder(PlaceInventoryOrderRequest request) {

@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-public interface UserJpaRepository extends JpaRepository<UserEntity, UUID> {
+public interface UserRepository extends JpaRepository<UserEntity, UUID> {
     Optional<UserEntity> findByIdAndRoleAndRemovedFalse(UUID id, String role);
 
     List<UserEntity> findByRoleAndRemovedFalse(String role);

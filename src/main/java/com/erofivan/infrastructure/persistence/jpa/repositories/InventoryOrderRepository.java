@@ -5,5 +5,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.UUID;
 
-public interface InventoryOrderJpaRepository extends JpaRepository<InventoryOrderEntity, UUID> {
+public interface InventoryOrderRepository extends JpaRepository<InventoryOrderEntity, UUID> {
 }

@@ -1,7 +1,7 @@
 package com.erofivan.application.core;
 
 import com.erofivan.infrastructure.persistence.jpa.model.PartEntity;
-import com.erofivan.infrastructure.persistence.jpa.repositories.PartJpaRepository;
+import com.erofivan.infrastructure.persistence.jpa.repositories.PartRepository;
 import com.erofivan.presentation.dto.PartResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -11,7 +11,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class PartCatalogService {
-    private final PartJpaRepository partRepository;
+    private final PartRepository partRepository;
 
     public List<PartResponse> listParts() {
         return partRepository.findByRemovedFalse().stream()

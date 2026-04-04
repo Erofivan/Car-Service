@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-public interface ModelJpaRepository extends JpaRepository<ModelEntity, UUID> {
+public interface ModelRepository extends JpaRepository<ModelEntity, UUID> {
     Optional<ModelEntity> findByCodeAndRemovedFalse(String code);
 
     List<ModelEntity> findByBrandCodeAndRemovedFalse(String brandCode);

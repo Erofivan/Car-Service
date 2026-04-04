@@ -6,6 +6,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 import java.util.UUID;
 
-public interface PartJpaRepository extends JpaRepository<PartEntity, UUID> {
+public interface PartRepository extends JpaRepository<PartEntity, UUID> {
     List<PartEntity> findByRemovedFalse();
 }

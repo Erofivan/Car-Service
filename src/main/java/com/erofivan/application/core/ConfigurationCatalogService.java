@@ -3,8 +3,8 @@ package com.erofivan.application.core;
 import com.erofivan.domain.exceptions.EntityNotFoundException;
 import com.erofivan.infrastructure.persistence.jpa.model.ModelComponentOptionJpaEntity;
 import com.erofivan.infrastructure.persistence.jpa.model.ModelEntity;
-import com.erofivan.infrastructure.persistence.jpa.repositories.ModelComponentOptionJpaRepository;
-import com.erofivan.infrastructure.persistence.jpa.repositories.ModelJpaRepository;
+import com.erofivan.infrastructure.persistence.jpa.repositories.ModelComponentOptionRepository;
+import com.erofivan.infrastructure.persistence.jpa.repositories.ModelRepository;
 import com.erofivan.presentation.dto.ConfigurationResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -18,8 +18,8 @@ import java.util.Map;
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class ConfigurationCatalogService {
-    private final ModelJpaRepository modelRepository;
-    private final ModelComponentOptionJpaRepository modelComponentOptionRepository;
+    private final ModelRepository modelRepository;
+    private final ModelComponentOptionRepository modelComponentOptionRepository;
 
     public ConfigurationResponse getDefaultConfiguration(String modelCode) {
         ModelEntity model = modelRepository.findByCodeAndRemovedFalse(modelCode)
