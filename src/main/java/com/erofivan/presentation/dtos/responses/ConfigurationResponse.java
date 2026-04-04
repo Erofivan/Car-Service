@@ -1,12 +1,14 @@
 package com.erofivan.presentation.dtos.responses;
 
-import java.util.Map;
+import com.erofivan.presentation.dtos.ConfigurationOption;
+
+import java.util.List;
 
 public record ConfigurationResponse(
     String modelCode,
-    Map<String, String> selectedOptions,
-    long basePrice,
-    long totalSurcharge,
-    long totalPrice
+    List<ConfigurationOption> selectedOptions,
+    Long basePrice,
+    Long totalSurcharge,
+    Long totalPrice
 ) {
 }

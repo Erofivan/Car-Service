@@ -1,6 +1,5 @@
-package com.erofivan.infrastructure.persistence.jpa.model;
+package com.erofivan.domain.models;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -14,21 +13,18 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = "model_component_options")
-public class ModelComponentOptionJpaEntity {
+@Table(name = "part_model_compatibility")
+public class PartModelCompatibilityEntity {
     @EmbeddedId
-    private ModelComponentOptionId id;
+    private PartModelCompatibilityId id;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @MapsId("partId")
+    @JoinColumn(name = "part_id", nullable = false)
+    private PartEntity part;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @MapsId("modelId")
     @JoinColumn(name = "model_id", nullable = false)
     private ModelEntity model;
-
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @MapsId("componentOptionId")
-    @JoinColumn(name = "component_option_id", nullable = false)
-    private ComponentOptionEntity componentOption;
-
-    @Column(nullable = false)
-    private boolean required;
 }

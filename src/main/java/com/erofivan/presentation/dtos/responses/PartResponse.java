@@ -6,6 +6,6 @@ public record PartResponse(
     UUID id,
     String name,
     String description,
-    long price
+    Long price
 ) {
 }

@@ -1,6 +1,6 @@
 package com.erofivan.application.core.services;
 
-import com.erofivan.infrastructure.persistence.jpa.model.PartEntity;
+import com.erofivan.domain.models.PartEntity;
 import com.erofivan.infrastructure.persistence.jpa.repositories.PartRepository;
 import com.erofivan.presentation.dtos.responses.PartResponse;
 import lombok.RequiredArgsConstructor;

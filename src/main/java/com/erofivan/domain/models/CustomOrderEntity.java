@@ -1,7 +1,10 @@
-package com.erofivan.infrastructure.persistence.jpa.model;
+package com.erofivan.domain.models;
 
+import com.erofivan.domain.OrderStatus;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
@@ -12,8 +15,8 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = "inventory_orders")
-public class InventoryOrderEntity extends BaseEntity {
+@Table(name = "custom_orders")
+public class CustomOrderEntity extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "client_id", nullable = false)
     private UserEntity client;
@@ -23,9 +26,13 @@ public class InventoryOrderEntity extends BaseEntity {
     private UserEntity manager;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "car_id", nullable = false)
-    private CarEntity car;
+    @JoinColumn(name = "model_id", nullable = false)
+    private ModelEntity model;
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 64)
-    private String status;
+    private OrderStatus status;
+
+    @Column(nullable = false)
+    private long totalPrice;
 }

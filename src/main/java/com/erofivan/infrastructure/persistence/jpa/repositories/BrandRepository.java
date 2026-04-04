@@ -1,6 +1,6 @@
 package com.erofivan.infrastructure.persistence.jpa.repositories;
 
-import com.erofivan.infrastructure.persistence.jpa.model.BrandEntity;
+import com.erofivan.domain.models.BrandEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

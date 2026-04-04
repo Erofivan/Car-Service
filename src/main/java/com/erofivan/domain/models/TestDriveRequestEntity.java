@@ -1,4 +1,4 @@
-package com.erofivan.infrastructure.persistence.jpa.model;
+package com.erofivan.domain.models;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

@@ -1,4 +1,4 @@
-package com.erofivan.infrastructure.persistence.jpa.model;
+package com.erofivan.domain.models;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
@@ -15,15 +15,15 @@ import java.util.UUID;
 @NoArgsConstructor
 @EqualsAndHashCode
 @Embeddable
-public class ModelComponentOptionId implements Serializable {
+public class PartModelCompatibilityId implements Serializable {
+    @Column(name = "part_id", nullable = false)
+    private UUID partId;
+
     @Column(name = "model_id", nullable = false)
     private UUID modelId;
 
-    @Column(name = "component_option_id", nullable = false)
-    private UUID componentOptionId;
-
-    public ModelComponentOptionId(UUID modelId, UUID componentOptionId) {
+    public PartModelCompatibilityId(UUID partId, UUID modelId) {
+        this.partId = partId;
         this.modelId = modelId;
-        this.componentOptionId = componentOptionId;
     }
 }

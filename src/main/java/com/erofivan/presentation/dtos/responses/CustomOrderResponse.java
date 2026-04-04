@@ -1,5 +1,7 @@
 package com.erofivan.presentation.dtos.responses;
 
+import com.erofivan.domain.OrderStatus;
+
 import java.util.UUID;
 
 public record CustomOrderResponse(
@@ -7,7 +9,7 @@ public record CustomOrderResponse(
     UUID clientId,
     UUID managerId,
     String modelCode,
-    String status,
-    long totalPrice
+    OrderStatus status,
+    Long totalPrice
 ) {
 }

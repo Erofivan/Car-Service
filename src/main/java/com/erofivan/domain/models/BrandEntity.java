@@ -1,4 +1,4 @@
-package com.erofivan.infrastructure.persistence.jpa.model;
+package com.erofivan.domain.models;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -9,14 +9,11 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = "parts")
-public class PartEntity extends BaseEntity {
+@Table(name = "brands")
+public class BrandEntity extends BaseEntity {
+    @Column(nullable = false, unique = true, length = 64)
+    private String code;
+
     @Column(nullable = false, length = 128)
     private String name;
-
-    @Column(length = 512)
-    private String description;
-
-    @Column(nullable = false)
-    private long price;
 }

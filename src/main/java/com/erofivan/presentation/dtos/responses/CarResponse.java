@@ -10,13 +10,13 @@ public record CarResponse(
     String modelCode,
     String bodyType,
     String fuelType,
-    int powerHp,
-    double engineLitres,
+    Integer powerHp,
+    Double engineLitres,
     String transmission,
     String drivetrain,
     String color,
-    long price,
-    boolean available,
-    boolean testDriveEnabled
+    Long price,
+    Boolean available,
+    Boolean testDriveEnabled
 ) {
 }
