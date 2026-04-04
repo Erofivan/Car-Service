@@ -1,8 +1,8 @@
 package com.erofivan.presentation.controllers;
 
-import com.erofivan.application.core.TestDriveCatalogService;
-import com.erofivan.presentation.dto.ScheduleTestDriveRequest;
-import com.erofivan.presentation.dto.TestDriveResponse;
+import com.erofivan.application.core.services.TestDriveCatalogService;
+import com.erofivan.presentation.dtos.requests.ScheduleTestDriveRequest;
+import com.erofivan.presentation.dtos.responses.TestDriveResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PostMapping;

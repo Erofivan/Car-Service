@@ -1,7 +1,7 @@
 package com.erofivan.infrastructure.persistence.jpa.mappers;
 
 import com.erofivan.infrastructure.persistence.jpa.model.CarEntity;
-import com.erofivan.presentation.dto.CarResponse;
+import com.erofivan.presentation.dtos.responses.CarResponse;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 

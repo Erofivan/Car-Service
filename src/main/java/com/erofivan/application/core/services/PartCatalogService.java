@@ -1,8 +1,8 @@
-package com.erofivan.application.core;
+package com.erofivan.application.core.services;
 
 import com.erofivan.infrastructure.persistence.jpa.model.PartEntity;
 import com.erofivan.infrastructure.persistence.jpa.repositories.PartRepository;
-import com.erofivan.presentation.dto.PartResponse;
+import com.erofivan.presentation.dtos.responses.PartResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

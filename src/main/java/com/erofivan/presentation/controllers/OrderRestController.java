@@ -1,10 +1,10 @@
 package com.erofivan.presentation.controllers;
 
-import com.erofivan.application.core.OrderCatalogService;
-import com.erofivan.presentation.dto.CustomOrderResponse;
-import com.erofivan.presentation.dto.InventoryOrderResponse;
-import com.erofivan.presentation.dto.PlaceCustomOrderRequest;
-import com.erofivan.presentation.dto.PlaceInventoryOrderRequest;
+import com.erofivan.application.core.services.OrderCatalogService;
+import com.erofivan.presentation.dtos.requests.PlaceCustomOrderRequest;
+import com.erofivan.presentation.dtos.requests.PlaceInventoryOrderRequest;
+import com.erofivan.presentation.dtos.responses.CustomOrderResponse;
+import com.erofivan.presentation.dtos.responses.InventoryOrderResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PostMapping;

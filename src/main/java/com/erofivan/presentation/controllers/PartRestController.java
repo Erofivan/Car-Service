@@ -1,7 +1,7 @@
 package com.erofivan.presentation.controllers;
 
-import com.erofivan.application.core.PartCatalogService;
-import com.erofivan.presentation.dto.PartResponse;
+import com.erofivan.application.core.services.PartCatalogService;
+import com.erofivan.presentation.dtos.responses.PartResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;

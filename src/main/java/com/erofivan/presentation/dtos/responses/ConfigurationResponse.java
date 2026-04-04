@@ -1,4 +1,4 @@
-package com.erofivan.presentation.dto;
+package com.erofivan.presentation.dtos.responses;
 
 import java.util.Map;
 

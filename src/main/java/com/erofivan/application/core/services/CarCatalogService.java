@@ -1,9 +1,9 @@
-package com.erofivan.application.core;
+package com.erofivan.application.core.services;
 
 import com.erofivan.infrastructure.persistence.jpa.mappers.CarJpaMapper;
 import com.erofivan.infrastructure.persistence.jpa.repositories.CarRepository;
 import com.erofivan.infrastructure.persistence.jpa.specifications.CarJpaSpecifications;
-import com.erofivan.presentation.dto.CarResponse;
+import com.erofivan.presentation.dtos.responses.CarResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

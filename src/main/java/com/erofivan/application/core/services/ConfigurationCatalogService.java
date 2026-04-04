@@ -1,11 +1,11 @@
-package com.erofivan.application.core;
+package com.erofivan.application.core.services;
 
 import com.erofivan.domain.exceptions.EntityNotFoundException;
 import com.erofivan.infrastructure.persistence.jpa.model.ModelComponentOptionJpaEntity;
 import com.erofivan.infrastructure.persistence.jpa.model.ModelEntity;
 import com.erofivan.infrastructure.persistence.jpa.repositories.ModelComponentOptionRepository;
 import com.erofivan.infrastructure.persistence.jpa.repositories.ModelRepository;
-import com.erofivan.presentation.dto.ConfigurationResponse;
+import com.erofivan.presentation.dtos.responses.ConfigurationResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

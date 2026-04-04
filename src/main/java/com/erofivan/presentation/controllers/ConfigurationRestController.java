@@ -1,7 +1,7 @@
 package com.erofivan.presentation.controllers;
 
-import com.erofivan.application.core.ConfigurationCatalogService;
-import com.erofivan.presentation.dto.ConfigurationResponse;
+import com.erofivan.application.core.services.ConfigurationCatalogService;
+import com.erofivan.presentation.dtos.responses.ConfigurationResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;

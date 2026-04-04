@@ -1,4 +1,4 @@
-package com.erofivan.application.core;
+package com.erofivan.application.core.services;
 
 import com.erofivan.domain.exceptions.EntityNotFoundException;
 import com.erofivan.infrastructure.persistence.jpa.model.CarEntity;
@@ -11,10 +11,10 @@ import com.erofivan.infrastructure.persistence.jpa.repositories.CustomOrderRepos
 import com.erofivan.infrastructure.persistence.jpa.repositories.InventoryOrderRepository;
 import com.erofivan.infrastructure.persistence.jpa.repositories.ModelRepository;
 import com.erofivan.infrastructure.persistence.jpa.repositories.UserRepository;
-import com.erofivan.presentation.dto.CustomOrderResponse;
-import com.erofivan.presentation.dto.InventoryOrderResponse;
-import com.erofivan.presentation.dto.PlaceCustomOrderRequest;
-import com.erofivan.presentation.dto.PlaceInventoryOrderRequest;
+import com.erofivan.presentation.dtos.requests.PlaceCustomOrderRequest;
+import com.erofivan.presentation.dtos.requests.PlaceInventoryOrderRequest;
+import com.erofivan.presentation.dtos.responses.CustomOrderResponse;
+import com.erofivan.presentation.dtos.responses.InventoryOrderResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

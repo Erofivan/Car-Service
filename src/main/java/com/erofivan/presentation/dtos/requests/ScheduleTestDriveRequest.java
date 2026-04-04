@@ -1,4 +1,4 @@
-package com.erofivan.presentation.dto;
+package com.erofivan.presentation.dtos.requests;
 
 import java.time.LocalDateTime;
 import java.util.UUID;

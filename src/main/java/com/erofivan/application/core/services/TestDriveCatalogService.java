@@ -1,4 +1,4 @@
-package com.erofivan.application.core;
+package com.erofivan.application.core.services;
 
 import com.erofivan.domain.exceptions.EntityNotFoundException;
 import com.erofivan.infrastructure.persistence.jpa.model.CarEntity;
@@ -7,8 +7,8 @@ import com.erofivan.infrastructure.persistence.jpa.model.UserEntity;
 import com.erofivan.infrastructure.persistence.jpa.repositories.CarRepository;
 import com.erofivan.infrastructure.persistence.jpa.repositories.TestDriveRequestRepository;
 import com.erofivan.infrastructure.persistence.jpa.repositories.UserRepository;
-import com.erofivan.presentation.dto.ScheduleTestDriveRequest;
-import com.erofivan.presentation.dto.TestDriveResponse;
+import com.erofivan.presentation.dtos.requests.ScheduleTestDriveRequest;
+import com.erofivan.presentation.dtos.responses.TestDriveResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

@@ -1,7 +1,7 @@
 package com.erofivan.presentation.controllers;
 
-import com.erofivan.application.core.CarCatalogService;
-import com.erofivan.presentation.dto.CarResponse;
+import com.erofivan.application.core.services.CarCatalogService;
+import com.erofivan.presentation.dtos.responses.CarResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
