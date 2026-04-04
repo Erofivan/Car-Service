@@ -1,6 +1,6 @@
 package com.erofivan.infrastructure.persistence.jpa.specifications;
 
-import com.erofivan.infrastructure.persistence.jpa.model.CarJpaEntity;
+import com.erofivan.infrastructure.persistence.jpa.model.CarEntity;
 import com.erofivan.infrastructure.persistence.jpa.model.ModelComponentOptionJpaEntity;
 import jakarta.persistence.criteria.Subquery;
 import org.springframework.data.jpa.domain.Specification;
@@ -9,11 +9,11 @@ public final class CarJpaSpecifications {
     private CarJpaSpecifications() {
     }
 
-    public static Specification<CarJpaEntity> notRemoved() {
+    public static Specification<CarEntity> notRemoved() {
         return (root, query, cb) -> cb.isFalse(root.get("removed"));
     }
 
-    public static Specification<CarJpaEntity> hasBrandCode(String brandCode) {
+    public static Specification<CarEntity> hasBrandCode(String brandCode) {
         return (root, query, cb) -> {
             if (brandCode == null || brandCode.isBlank()) {
                 return cb.conjunction();
@@ -22,7 +22,7 @@ public final class CarJpaSpecifications {
         };
     }
 
-    public static Specification<CarJpaEntity> hasModelCode(String modelCode) {
+    public static Specification<CarEntity> hasModelCode(String modelCode) {
         return (root, query, cb) -> {
             if (modelCode == null || modelCode.isBlank()) {
                 return cb.conjunction();
@@ -31,7 +31,7 @@ public final class CarJpaSpecifications {
         };
     }
 
-    public static Specification<CarJpaEntity> hasComponentName(String componentName) {
+    public static Specification<CarEntity> hasComponentName(String componentName) {
         return (root, query, cb) -> {
             if (componentName == null || componentName.isBlank()) {
                 return cb.conjunction();
@@ -49,7 +49,7 @@ public final class CarJpaSpecifications {
         };
     }
 
-    public static Specification<CarJpaEntity> byFilters(String brandCode, String modelCode, String componentName) {
+    public static Specification<CarEntity> byFilters(String brandCode, String modelCode, String componentName) {
         return Specification.where(notRemoved())
             .and(hasBrandCode(brandCode))
             .and(hasModelCode(modelCode))

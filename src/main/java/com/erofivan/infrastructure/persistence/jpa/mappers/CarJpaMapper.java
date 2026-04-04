@@ -1,6 +1,6 @@
 package com.erofivan.infrastructure.persistence.jpa.mappers;
 
-import com.erofivan.infrastructure.persistence.jpa.model.CarJpaEntity;
+import com.erofivan.infrastructure.persistence.jpa.model.CarEntity;
 import com.erofivan.presentation.dto.CarResponse;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -11,5 +11,5 @@ public interface CarJpaMapper {
     @Mapping(target = "brandCode", source = "model.brand.code")
     @Mapping(target = "model", source = "model.name")
     @Mapping(target = "modelCode", source = "model.code")
-    CarResponse toResponse(CarJpaEntity entity);
+    CarResponse toResponse(CarEntity entity);
 }

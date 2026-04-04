@@ -2,7 +2,7 @@ package com.erofivan.application.core;
 
 import com.erofivan.domain.exceptions.EntityNotFoundException;
 import com.erofivan.infrastructure.persistence.jpa.model.ModelComponentOptionJpaEntity;
-import com.erofivan.infrastructure.persistence.jpa.model.ModelJpaEntity;
+import com.erofivan.infrastructure.persistence.jpa.model.ModelEntity;
 import com.erofivan.infrastructure.persistence.jpa.repositories.ModelComponentOptionJpaRepository;
 import com.erofivan.infrastructure.persistence.jpa.repositories.ModelJpaRepository;
 import com.erofivan.presentation.dto.ConfigurationResponse;
@@ -22,7 +22,7 @@ public class ConfigurationCatalogService {
     private final ModelComponentOptionJpaRepository modelComponentOptionRepository;
 
     public ConfigurationResponse getDefaultConfiguration(String modelCode) {
-        ModelJpaEntity model = modelRepository.findByCodeAndRemovedFalse(modelCode)
+        ModelEntity model = modelRepository.findByCodeAndRemovedFalse(modelCode)
             .orElseThrow(() -> new EntityNotFoundException("Model", modelCode));
 
         List<ModelComponentOptionJpaEntity> links = modelComponentOptionRepository.findByIdModelId(model.getId());

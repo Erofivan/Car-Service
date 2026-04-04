@@ -20,7 +20,7 @@ import java.util.UUID;
 @Setter
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
-public abstract class BaseJpaEntity implements Serializable {
+public abstract class BaseEntity implements Serializable {
     @Id
     @GeneratedValue
     @UuidGenerator

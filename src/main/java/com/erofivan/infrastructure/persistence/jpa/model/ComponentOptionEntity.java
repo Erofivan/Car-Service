@@ -9,11 +9,14 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = "brands")
-public class BrandJpaEntity extends BaseJpaEntity {
-    @Column(nullable = false, unique = true, length = 64)
-    private String code;
+@Table(name = "component_options")
+public class ComponentOptionEntity extends BaseEntity {
+    @Column(nullable = false, length = 64)
+    private String slotName;
 
     @Column(nullable = false, length = 128)
     private String name;
+
+    @Column(nullable = false)
+    private long surcharge;
 }

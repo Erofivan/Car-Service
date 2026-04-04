@@ -13,10 +13,10 @@ import lombok.Setter;
 @Setter
 @Entity
 @Table(name = "cars")
-public class CarJpaEntity extends BaseJpaEntity {
+public class CarEntity extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "model_id", nullable = false)
-    private ModelJpaEntity model;
+    private ModelEntity model;
 
     @Column(nullable = false, length = 64)
     private String bodyType;

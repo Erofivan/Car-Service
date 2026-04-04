@@ -9,11 +9,11 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = "users")
-public class UserJpaEntity extends BaseJpaEntity {
-    @Column(nullable = false, length = 128)
-    private String fullName;
+@Table(name = "brands")
+public class BrandEntity extends BaseEntity {
+    @Column(nullable = false, unique = true, length = 64)
+    private String code;
 
-    @Column(nullable = false, length = 32)
-    private String role;
+    @Column(nullable = false, length = 128)
+    private String name;
 }

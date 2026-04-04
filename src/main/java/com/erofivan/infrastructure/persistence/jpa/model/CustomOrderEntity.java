@@ -12,20 +12,23 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = "inventory_orders")
-public class InventoryOrderJpaEntity extends BaseJpaEntity {
+@Table(name = "custom_orders")
+public class CustomOrderEntity extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "client_id", nullable = false)
-    private UserJpaEntity client;
+    private UserEntity client;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "manager_id", nullable = false)
-    private UserJpaEntity manager;
+    private UserEntity manager;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "car_id", nullable = false)
-    private CarJpaEntity car;
+    @JoinColumn(name = "model_id", nullable = false)
+    private ModelEntity model;
 
     @Column(nullable = false, length = 64)
     private String status;
+
+    @Column(nullable = false)
+    private long totalPrice;
 }

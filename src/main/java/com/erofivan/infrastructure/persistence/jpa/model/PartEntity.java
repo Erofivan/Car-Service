@@ -10,7 +10,7 @@ import lombok.Setter;
 @Setter
 @Entity
 @Table(name = "parts")
-public class PartJpaEntity extends BaseJpaEntity {
+public class PartEntity extends BaseEntity {
     @Column(nullable = false, length = 128)
     private String name;
 

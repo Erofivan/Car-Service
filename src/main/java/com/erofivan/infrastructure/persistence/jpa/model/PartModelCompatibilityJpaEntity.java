@@ -21,10 +21,10 @@ public class PartModelCompatibilityJpaEntity {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @MapsId("partId")
     @JoinColumn(name = "part_id", nullable = false)
-    private PartJpaEntity part;
+    private PartEntity part;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @MapsId("modelId")
     @JoinColumn(name = "model_id", nullable = false)
-    private ModelJpaEntity model;
+    private ModelEntity model;
 }

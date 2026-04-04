@@ -1,9 +1,9 @@
 package com.erofivan.application.core;
 
 import com.erofivan.domain.exceptions.EntityNotFoundException;
-import com.erofivan.infrastructure.persistence.jpa.model.CarJpaEntity;
-import com.erofivan.infrastructure.persistence.jpa.model.TestDriveRequestJpaEntity;
-import com.erofivan.infrastructure.persistence.jpa.model.UserJpaEntity;
+import com.erofivan.infrastructure.persistence.jpa.model.CarEntity;
+import com.erofivan.infrastructure.persistence.jpa.model.TestDriveRequestEntity;
+import com.erofivan.infrastructure.persistence.jpa.model.UserEntity;
 import com.erofivan.infrastructure.persistence.jpa.repositories.CarJpaRepository;
 import com.erofivan.infrastructure.persistence.jpa.repositories.TestDriveRequestJpaRepository;
 import com.erofivan.infrastructure.persistence.jpa.repositories.UserJpaRepository;
@@ -22,10 +22,10 @@ public class TestDriveCatalogService {
 
     @Transactional
     public TestDriveResponse schedule(ScheduleTestDriveRequest request) {
-        UserJpaEntity client = userRepository.findByIdAndRoleAndRemovedFalse(request.clientId(), "CLIENT")
+        UserEntity client = userRepository.findByIdAndRoleAndRemovedFalse(request.clientId(), "CLIENT")
             .orElseThrow(() -> new EntityNotFoundException("Client", request.clientId().toString()));
 
-        CarJpaEntity car = carRepository.findById(request.carId())
+        CarEntity car = carRepository.findById(request.carId())
             .filter(c -> !c.isRemoved())
             .orElseThrow(() -> new EntityNotFoundException("Car", request.carId().toString()));
 
@@ -33,7 +33,7 @@ public class TestDriveCatalogService {
             throw new IllegalStateException("Test drive is disabled for this car");
         }
 
-        TestDriveRequestJpaEntity entity = new TestDriveRequestJpaEntity();
+        TestDriveRequestEntity entity = new TestDriveRequestEntity();
         entity.setClient(client);
         entity.setCar(car);
         entity.setStartsAt(request.startsAt());

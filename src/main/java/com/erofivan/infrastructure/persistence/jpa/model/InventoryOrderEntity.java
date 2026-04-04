@@ -9,21 +9,23 @@ import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
-
 @Getter
 @Setter
 @Entity
-@Table(name = "test_drive_requests")
-public class TestDriveRequestJpaEntity extends BaseJpaEntity {
+@Table(name = "inventory_orders")
+public class InventoryOrderEntity extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "client_id", nullable = false)
-    private UserJpaEntity client;
+    private UserEntity client;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "manager_id", nullable = false)
+    private UserEntity manager;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "car_id", nullable = false)
-    private CarJpaEntity car;
+    private CarEntity car;
 
-    @Column(nullable = false)
-    private LocalDateTime startsAt;
+    @Column(nullable = false, length = 64)
+    private String status;
 }

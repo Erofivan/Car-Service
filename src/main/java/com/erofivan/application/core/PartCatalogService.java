@@ -1,6 +1,6 @@
 package com.erofivan.application.core;
 
-import com.erofivan.infrastructure.persistence.jpa.model.PartJpaEntity;
+import com.erofivan.infrastructure.persistence.jpa.model.PartEntity;
 import com.erofivan.infrastructure.persistence.jpa.repositories.PartJpaRepository;
 import com.erofivan.presentation.dto.PartResponse;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +19,7 @@ public class PartCatalogService {
             .toList();
     }
 
-    private PartResponse toResponse(PartJpaEntity entity) {
+    private PartResponse toResponse(PartEntity entity) {
         return new PartResponse(entity.getId(), entity.getName(), entity.getDescription(), entity.getPrice());
     }
 }

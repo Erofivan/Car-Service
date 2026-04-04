@@ -1,9 +1,9 @@
 package com.erofivan.infrastructure.persistence.jpa.repositories;
 
-import com.erofivan.infrastructure.persistence.jpa.model.TestDriveRequestJpaEntity;
+import com.erofivan.infrastructure.persistence.jpa.model.TestDriveRequestEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.UUID;
 
-public interface TestDriveRequestJpaRepository extends JpaRepository<TestDriveRequestJpaEntity, UUID> {
+public interface TestDriveRequestJpaRepository extends JpaRepository<TestDriveRequestEntity, UUID> {
 }

@@ -22,12 +22,12 @@ public class ModelComponentOptionJpaEntity {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @MapsId("modelId")
     @JoinColumn(name = "model_id", nullable = false)
-    private ModelJpaEntity model;
+    private ModelEntity model;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @MapsId("componentOptionId")
     @JoinColumn(name = "component_option_id", nullable = false)
-    private ComponentOptionJpaEntity componentOption;
+    private ComponentOptionEntity componentOption;
 
     @Column(nullable = false)
     private boolean required;

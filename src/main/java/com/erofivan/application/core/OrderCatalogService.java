@@ -1,11 +1,11 @@
 package com.erofivan.application.core;
 
 import com.erofivan.domain.exceptions.EntityNotFoundException;
-import com.erofivan.infrastructure.persistence.jpa.model.CarJpaEntity;
-import com.erofivan.infrastructure.persistence.jpa.model.CustomOrderJpaEntity;
-import com.erofivan.infrastructure.persistence.jpa.model.InventoryOrderJpaEntity;
-import com.erofivan.infrastructure.persistence.jpa.model.ModelJpaEntity;
-import com.erofivan.infrastructure.persistence.jpa.model.UserJpaEntity;
+import com.erofivan.infrastructure.persistence.jpa.model.CarEntity;
+import com.erofivan.infrastructure.persistence.jpa.model.CustomOrderEntity;
+import com.erofivan.infrastructure.persistence.jpa.model.InventoryOrderEntity;
+import com.erofivan.infrastructure.persistence.jpa.model.ModelEntity;
+import com.erofivan.infrastructure.persistence.jpa.model.UserEntity;
 import com.erofivan.infrastructure.persistence.jpa.repositories.CarJpaRepository;
 import com.erofivan.infrastructure.persistence.jpa.repositories.CustomOrderJpaRepository;
 import com.erofivan.infrastructure.persistence.jpa.repositories.InventoryOrderJpaRepository;
@@ -33,10 +33,10 @@ public class OrderCatalogService {
 
     @Transactional
     public InventoryOrderResponse placeInventoryOrder(PlaceInventoryOrderRequest request) {
-        UserJpaEntity client = userRepository.findByIdAndRoleAndRemovedFalse(request.clientId(), "CLIENT")
+        UserEntity client = userRepository.findByIdAndRoleAndRemovedFalse(request.clientId(), "CLIENT")
             .orElseThrow(() -> new EntityNotFoundException("Client", request.clientId().toString()));
 
-        CarJpaEntity car = carRepository.findById(request.carId())
+        CarEntity car = carRepository.findById(request.carId())
             .filter(c -> !c.isRemoved())
             .orElseThrow(() -> new EntityNotFoundException("Car", request.carId().toString()));
 
@@ -44,12 +44,12 @@ public class OrderCatalogService {
             throw new IllegalStateException("Car is not available");
         }
 
-        UserJpaEntity manager = assignManager();
+        UserEntity manager = assignManager();
 
         car.setAvailable(false);
         carRepository.save(car);
 
-        InventoryOrderJpaEntity order = new InventoryOrderJpaEntity();
+        InventoryOrderEntity order = new InventoryOrderEntity();
         order.setClient(client);
         order.setManager(manager);
         order.setCar(car);
@@ -63,17 +63,17 @@ public class OrderCatalogService {
 
     @Transactional
     public CustomOrderResponse placeCustomOrder(PlaceCustomOrderRequest request) {
-        UserJpaEntity client = userRepository.findByIdAndRoleAndRemovedFalse(request.clientId(), "CLIENT")
+        UserEntity client = userRepository.findByIdAndRoleAndRemovedFalse(request.clientId(), "CLIENT")
             .orElseThrow(() -> new EntityNotFoundException("Client", request.clientId().toString()));
 
-        ModelJpaEntity model = modelRepository.findByCodeAndRemovedFalse(request.modelCode())
+        ModelEntity model = modelRepository.findByCodeAndRemovedFalse(request.modelCode())
             .orElseThrow(() -> new EntityNotFoundException("Model", request.modelCode()));
 
-        UserJpaEntity manager = assignManager();
+        UserEntity manager = assignManager();
 
         long totalPrice = model.getBasePrice();
 
-        CustomOrderJpaEntity order = new CustomOrderJpaEntity();
+        CustomOrderEntity order = new CustomOrderEntity();
         order.setClient(client);
         order.setManager(manager);
         order.setModel(model);
@@ -86,8 +86,8 @@ public class OrderCatalogService {
         );
     }
 
-    private UserJpaEntity assignManager() {
-        List<UserJpaEntity> managers = userRepository.findByRoleAndRemovedFalse("MANAGER");
+    private UserEntity assignManager() {
+        List<UserEntity> managers = userRepository.findByRoleAndRemovedFalse("MANAGER");
         if (managers.isEmpty()) {
             throw new IllegalStateException("No managers available");
         }
