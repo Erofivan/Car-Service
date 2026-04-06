@@ -140,11 +140,19 @@ public final class CarJpaSpecifications {
     }
 
     public static Specification<CarEntity> byFilters(
-        String brandCode, String modelCode, String bodyType,
-        String fuelType, String transmission, String drivetrain,
-        String color, Long minPrice, Long maxPrice,
-        Integer minPower, Integer maxPower,
-        Double minEngine, Double maxEngine,
+        String brandCode,
+        String modelCode,
+        String bodyType,
+        String fuelType,
+        String transmission,
+        String drivetrain,
+        String color,
+        Long minPrice,
+        Long maxPrice,
+        Integer minPower,
+        Integer maxPower,
+        Double minEngine,
+        Double maxEngine,
         String componentName
     ) {
         return Specification.where(notRemoved())

@@ -1,5 +1,6 @@
 package com.erofivan.application.core.services;
 
+import com.erofivan.application.contracts.services.TestDriveService;
 import com.erofivan.domain.UserRole;
 import com.erofivan.domain.exceptions.DomainValidationException;
 import com.erofivan.domain.exceptions.EntityNotFoundException;
@@ -20,7 +21,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class TestDriveCatalogService {
+public class TestDriveCatalogService implements TestDriveService {
     private final CarRepository carRepository;
     private final UserRepository userRepository;
     private final TestDriveRequestRepository testDriveRepository;

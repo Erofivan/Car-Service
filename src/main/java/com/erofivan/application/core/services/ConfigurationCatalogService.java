@@ -1,5 +1,6 @@
 package com.erofivan.application.core.services;
 
+import com.erofivan.application.contracts.services.ConfigurationService;
 import com.erofivan.domain.exceptions.DomainValidationException;
 import com.erofivan.domain.exceptions.EntityNotFoundException;
 import com.erofivan.domain.exceptions.IncompatibleComponentException;
@@ -26,7 +27,7 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
-public class ConfigurationCatalogService {
+public class ConfigurationCatalogService implements ConfigurationService {
     private final ModelRepository modelRepository;
     private final ModelComponentOptionRepository modelComponentOptionRepository;
     private final ComponentOptionRepository componentOptionRepository;

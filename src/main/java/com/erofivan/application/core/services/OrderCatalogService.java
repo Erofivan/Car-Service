@@ -1,5 +1,6 @@
 package com.erofivan.application.core.services;
 
+import com.erofivan.application.contracts.services.OrderService;
 import com.erofivan.domain.OrderStatus;
 import com.erofivan.domain.UserRole;
 import com.erofivan.domain.exceptions.DomainValidationException;
@@ -28,7 +29,7 @@ import java.util.concurrent.ThreadLocalRandom;
 
 @Service
 @RequiredArgsConstructor
-public class OrderCatalogService {
+public class OrderCatalogService implements OrderService {
     private final CarRepository carRepository;
     private final UserRepository userRepository;
     private final ModelRepository modelRepository;

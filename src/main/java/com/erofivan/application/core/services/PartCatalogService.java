@@ -1,5 +1,6 @@
 package com.erofivan.application.core.services;
 
+import com.erofivan.application.contracts.services.PartService;
 import com.erofivan.domain.models.PartEntity;
 import com.erofivan.infrastructure.persistence.jpa.repositories.PartRepository;
 import com.erofivan.presentation.dtos.responses.PartResponse;
@@ -10,7 +11,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class PartCatalogService {
+public class PartCatalogService implements PartService {
     private final PartRepository partRepository;
 
     public List<PartResponse> listParts() {

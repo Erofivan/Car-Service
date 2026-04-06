@@ -1,5 +1,6 @@
 package com.erofivan.application.core.services;
 
+import com.erofivan.application.contracts.services.CarService;
 import com.erofivan.domain.exceptions.EntityNotFoundException;
 import com.erofivan.domain.models.CarEntity;
 import com.erofivan.infrastructure.persistence.jpa.mappers.CarMapper;
@@ -16,23 +17,31 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
-public class CarCatalogService {
+public class CarCatalogService implements CarService {
     private final CarRepository carRepository;
     private final CarMapper carMapper;
 
     public CarResponse getCarById(UUID carId) {
         CarEntity car = carRepository.findById(carId)
-            .filter(c -> !c.isRemoved())
+            .filter(carEntity -> !carEntity.isRemoved())
             .orElseThrow(() -> new EntityNotFoundException("Car", carId.toString()));
         return carMapper.toResponse(car);
     }
 
     public List<CarResponse> getCars(
-        String brandCode, String modelCode, String bodyType,
-        String fuelType, String transmission, String drivetrain,
-        String color, Long minPrice, Long maxPrice,
-        Integer minPower, Integer maxPower,
-        Double minEngine, Double maxEngine,
+        String brandCode,
+        String modelCode,
+        String bodyType,
+        String fuelType,
+        String transmission,
+        String drivetrain,
+        String color,
+        Long minPrice,
+        Long maxPrice,
+        Integer minPower,
+        Integer maxPower,
+        Double minEngine,
+        Double maxEngine,
         String componentName
     ) {
         return carRepository.findAll(

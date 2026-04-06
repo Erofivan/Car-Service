@@ -41,10 +41,20 @@ public class CarRestController {
         @RequestParam(required = false) String componentName
     ) {
         return carCatalogService.getCars(
-            brandCode, modelCode, bodyType, fuelType,
-            transmission, drivetrain, color,
-            minPrice, maxPrice, minPower, maxPower,
-            minEngine, maxEngine, componentName
+            brandCode,
+            modelCode,
+            bodyType,
+            fuelType,
+            transmission,
+            drivetrain,
+            color,
+            minPrice,
+            maxPrice,
+            minPower,
+            maxPower,
+            minEngine,
+            maxEngine,
+            componentName
         );
     }
 }
