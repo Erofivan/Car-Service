@@ -1,5 +1,6 @@
 package com.erofivan.application.core.services;
 
+import com.erofivan.application.contracts.security.CurrentUserProvider;
 import com.erofivan.application.contracts.services.OrderService;
 import com.erofivan.domain.OrderStatus;
 import com.erofivan.domain.UserRole;
@@ -26,6 +27,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 
 @Service
@@ -37,10 +39,20 @@ public class OrderCatalogService implements OrderService {
     private final InventoryOrderRepository inventoryOrderRepository;
     private final CustomOrderRepository customOrderRepository;
     private final ConfigurationCatalogService configurationCatalogService;
+    private final CurrentUserProvider currentUserProvider;
 
     @Transactional(readOnly = true)
     public List<InventoryOrderResponse> getInventoryOrders() {
-        return inventoryOrderRepository.findAllBy().stream()
+        List<InventoryOrderEntity> orders;
+
+        if (currentUserProvider.hasRole("MANAGER") || currentUserProvider.hasRole("ADMIN")) {
+            orders = inventoryOrderRepository.findAllBy();
+        } else {
+            UUID currentUserId = currentUserProvider.getCurrentUserId();
+            orders = inventoryOrderRepository.findByClientIdAndRemovedFalse(currentUserId);
+        }
+
+        return orders.stream()
             .map(order -> new InventoryOrderResponse(
                 order.getId(), order.getClient().getId(),
                 order.getManager().getId(), order.getCar().getId(),
@@ -50,7 +62,16 @@ public class OrderCatalogService implements OrderService {
 
     @Transactional(readOnly = true)
     public List<CustomOrderResponse> getCustomOrders() {
-        return customOrderRepository.findAllBy().stream()
+        List<CustomOrderEntity> orders;
+
+        if (currentUserProvider.hasRole("MANAGER") || currentUserProvider.hasRole("ADMIN")) {
+            orders = customOrderRepository.findAllBy();
+        } else {
+            UUID currentUserId = currentUserProvider.getCurrentUserId();
+            orders = customOrderRepository.findByClientIdAndRemovedFalse(currentUserId);
+        }
+
+        return orders.stream()
             .map(order -> new CustomOrderResponse(
                 order.getId(), order.getClient().getId(),
                 order.getManager().getId(), order.getModel().getCode(),
@@ -58,16 +79,38 @@ public class OrderCatalogService implements OrderService {
             .toList();
     }
 
+    @Transactional(readOnly = true)
+    public InventoryOrderResponse getInventoryOrder(UUID id) {
+        InventoryOrderEntity order = inventoryOrderRepository.findById(id)
+            .orElseThrow(() -> new EntityNotFoundException("InventoryOrder", id.toString()));
+
+        return new InventoryOrderResponse(
+            order.getId(), order.getClient().getId(),
+            order.getManager().getId(), order.getCar().getId(),
+            order.getStatus());
+    }
+
+    @Transactional(readOnly = true)
+    public CustomOrderResponse getCustomOrder(UUID id) {
+        CustomOrderEntity order = customOrderRepository.findById(id)
+            .orElseThrow(() -> new EntityNotFoundException("CustomOrder", id.toString()));
+
+        return new CustomOrderResponse(
+            order.getId(), order.getClient().getId(),
+            order.getManager().getId(), order.getModel().getCode(),
+            order.getStatus(), order.getTotalPrice());
+    }
+
     @Transactional
     public InventoryOrderResponse placeInventoryOrder(@NonNull PlaceInventoryOrderRequest request) {
-        if (request.clientId() == null)
-            throw new DomainValidationException("clientId is required");
-
         if (request.carId() == null)
             throw new DomainValidationException("carId is required");
 
-        UserEntity client = userRepository.findByIdAndRoleAndRemovedFalse(request.clientId(), UserRole.CLIENT)
-            .orElseThrow(() -> new EntityNotFoundException("Client", request.clientId().toString()));
+        UUID clientId = currentUserProvider.getCurrentUserId();
+
+        UserEntity client = userRepository.findById(clientId)
+            .filter(u -> !u.isRemoved())
+            .orElseThrow(() -> new EntityNotFoundException("Client", clientId.toString()));
 
         CarEntity car = carRepository.findById(request.carId())
             .filter(c -> !c.isRemoved())
@@ -79,7 +122,6 @@ public class OrderCatalogService implements OrderService {
         UserEntity manager = assignManager();
 
         car.setAvailable(false);
-
         carRepository.save(car);
 
         InventoryOrderEntity order = new InventoryOrderEntity();
@@ -97,17 +139,14 @@ public class OrderCatalogService implements OrderService {
 
     @Transactional
     public CustomOrderResponse placeCustomOrder(@NonNull PlaceCustomOrderRequest request) {
-        if (request.clientId() == null)
-            throw new DomainValidationException("clientId is required");
-
         if (request.modelCode() == null || request.modelCode().isBlank())
             throw new DomainValidationException("modelCode is required");
 
-        if (request.optionIds() == null || request.optionIds().isEmpty())
-            throw new DomainValidationException("optionIds is required");
+        UUID clientId = currentUserProvider.getCurrentUserId();
 
-        UserEntity client = userRepository.findByIdAndRoleAndRemovedFalse(request.clientId(), UserRole.CLIENT)
-            .orElseThrow(() -> new EntityNotFoundException("Client", request.clientId().toString()));
+        UserEntity client = userRepository.findById(clientId)
+            .filter(u -> !u.isRemoved())
+            .orElseThrow(() -> new EntityNotFoundException("Client", clientId.toString()));
 
         ConfigurationResponse config = configurationCatalogService
             .buildConfiguration(request.modelCode(), request.optionIds());
@@ -132,6 +171,100 @@ public class OrderCatalogService implements OrderService {
         );
     }
 
+    @Transactional
+    public InventoryOrderResponse cancelInventoryOrder(UUID id) {
+        InventoryOrderEntity order = inventoryOrderRepository.findById(id)
+            .orElseThrow(() -> new EntityNotFoundException("InventoryOrder", id.toString()));
+
+        validateStatusTransition(order.getStatus(), OrderStatus.CANCELLED);
+        order.setStatus(OrderStatus.CANCELLED);
+
+        order.getCar().setAvailable(true);
+        carRepository.save(order.getCar());
+
+        inventoryOrderRepository.save(order);
+
+        return new InventoryOrderResponse(
+            order.getId(), order.getClient().getId(),
+            order.getManager().getId(), order.getCar().getId(),
+            order.getStatus());
+    }
+
+    @Transactional
+    public CustomOrderResponse cancelCustomOrder(UUID id) {
+        CustomOrderEntity order = customOrderRepository.findById(id)
+            .orElseThrow(() -> new EntityNotFoundException("CustomOrder", id.toString()));
+
+        validateStatusTransition(order.getStatus(), OrderStatus.CANCELLED);
+        order.setStatus(OrderStatus.CANCELLED);
+        customOrderRepository.save(order);
+
+        return new CustomOrderResponse(
+            order.getId(), order.getClient().getId(),
+            order.getManager().getId(), order.getModel().getCode(),
+            order.getStatus(), order.getTotalPrice());
+    }
+
+    @Transactional
+    public InventoryOrderResponse approveInventoryOrder(UUID id) {
+        InventoryOrderEntity order = inventoryOrderRepository.findById(id)
+            .orElseThrow(() -> new EntityNotFoundException("InventoryOrder", id.toString()));
+
+        validateStatusTransition(order.getStatus(), OrderStatus.APPROVED_BY_MANAGER);
+        order.setStatus(OrderStatus.APPROVED_BY_MANAGER);
+        inventoryOrderRepository.save(order);
+
+        return new InventoryOrderResponse(
+            order.getId(), order.getClient().getId(),
+            order.getManager().getId(), order.getCar().getId(),
+            order.getStatus());
+    }
+
+    @Transactional
+    public CustomOrderResponse approveCustomOrder(UUID id) {
+        CustomOrderEntity order = customOrderRepository.findById(id)
+            .orElseThrow(() -> new EntityNotFoundException("CustomOrder", id.toString()));
+
+        validateStatusTransition(order.getStatus(), OrderStatus.APPROVED_BY_MANAGER);
+        order.setStatus(OrderStatus.APPROVED_BY_MANAGER);
+        customOrderRepository.save(order);
+
+        return new CustomOrderResponse(
+            order.getId(), order.getClient().getId(),
+            order.getManager().getId(), order.getModel().getCode(),
+            order.getStatus(), order.getTotalPrice());
+    }
+
+    @Transactional
+    public InventoryOrderResponse confirmWarehouseInventoryOrder(UUID id) {
+        InventoryOrderEntity order = inventoryOrderRepository.findById(id)
+            .orElseThrow(() -> new EntityNotFoundException("InventoryOrder", id.toString()));
+
+        validateStatusTransition(order.getStatus(), OrderStatus.APPROVED_BY_WAREHOUSE);
+        order.setStatus(OrderStatus.APPROVED_BY_WAREHOUSE);
+        inventoryOrderRepository.save(order);
+
+        return new InventoryOrderResponse(
+            order.getId(), order.getClient().getId(),
+            order.getManager().getId(), order.getCar().getId(),
+            order.getStatus());
+    }
+
+    @Transactional
+    public CustomOrderResponse confirmWarehouseCustomOrder(UUID id) {
+        CustomOrderEntity order = customOrderRepository.findById(id)
+            .orElseThrow(() -> new EntityNotFoundException("CustomOrder", id.toString()));
+
+        validateStatusTransition(order.getStatus(), OrderStatus.APPROVED_BY_WAREHOUSE);
+        order.setStatus(OrderStatus.APPROVED_BY_WAREHOUSE);
+        customOrderRepository.save(order);
+
+        return new CustomOrderResponse(
+            order.getId(), order.getClient().getId(),
+            order.getManager().getId(), order.getModel().getCode(),
+            order.getStatus(), order.getTotalPrice());
+    }
+
     private UserEntity assignManager() {
         List<UserEntity> managers = userRepository.findByRoleAndRemovedFalse(UserRole.MANAGER);
 
@@ -141,5 +274,20 @@ public class OrderCatalogService implements OrderService {
         int index = ThreadLocalRandom.current().nextInt(managers.size());
 
         return managers.get(index);
+    }
+
+    private void validateStatusTransition(OrderStatus current, OrderStatus target) {
+        boolean valid = switch (target) {
+            case APPROVED_BY_MANAGER -> current == OrderStatus.PLACED;
+            case APPROVED_BY_WAREHOUSE -> current == OrderStatus.APPROVED_BY_MANAGER;
+            case CANCELLED -> current == OrderStatus.PLACED
+                || current == OrderStatus.APPROVED_BY_MANAGER;
+            default -> false;
+        };
+
+        if (!valid) {
+            throw new DomainValidationException(
+                "Cannot transition from " + current + " to " + target);
+        }
     }
 }

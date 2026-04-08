@@ -1,7 +1,7 @@
 package com.erofivan.application.core.services;
 
+import com.erofivan.application.contracts.security.CurrentUserProvider;
 import com.erofivan.application.contracts.services.TestDriveService;
-import com.erofivan.domain.UserRole;
 import com.erofivan.domain.exceptions.DomainValidationException;
 import com.erofivan.domain.exceptions.EntityNotFoundException;
 import com.erofivan.domain.models.CarEntity;
@@ -19,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -26,6 +27,7 @@ public class TestDriveCatalogService implements TestDriveService {
     private final CarRepository carRepository;
     private final UserRepository userRepository;
     private final TestDriveRequestRepository testDriveRepository;
+    private final CurrentUserProvider currentUserProvider;
 
     @Transactional(readOnly = true)
     public List<TestDriveResponse> getTestDrives() {
@@ -38,9 +40,6 @@ public class TestDriveCatalogService implements TestDriveService {
 
     @Transactional
     public TestDriveResponse schedule(@NonNull ScheduleTestDriveRequest request) {
-        if (request.clientId() == null)
-            throw new DomainValidationException("clientId is required");
-
         if (request.carId() == null)
             throw new DomainValidationException("carId is required");
 
@@ -50,8 +49,11 @@ public class TestDriveCatalogService implements TestDriveService {
         if (request.startsAt().isBefore(LocalDateTime.now()))
             throw new DomainValidationException("startsAt must be in the future");
 
-        UserEntity client = userRepository.findByIdAndRoleAndRemovedFalse(request.clientId(), UserRole.CLIENT)
-            .orElseThrow(() -> new EntityNotFoundException("Client", request.clientId().toString()));
+        UUID clientId = currentUserProvider.getCurrentUserId();
+
+        UserEntity client = userRepository.findById(clientId)
+            .filter(u -> !u.isRemoved())
+            .orElseThrow(() -> new EntityNotFoundException("Client", clientId.toString()));
 
         CarEntity car = carRepository.findById(request.carId())
             .filter(c -> !c.isRemoved())
