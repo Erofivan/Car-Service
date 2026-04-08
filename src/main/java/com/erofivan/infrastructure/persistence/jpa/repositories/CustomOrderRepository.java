@@ -10,4 +10,7 @@ import java.util.UUID;
 public interface CustomOrderRepository extends JpaRepository<CustomOrderEntity, UUID> {
     @EntityGraph(attributePaths = {"client", "manager", "model"})
     List<CustomOrderEntity> findAllBy();
+
+    @EntityGraph(attributePaths = {"client", "manager", "model"})
+    List<CustomOrderEntity> findByClientIdAndRemovedFalse(UUID clientId);
 }

@@ -11,4 +11,7 @@ public interface InventoryOrderRepository extends JpaRepository<InventoryOrderEn
 
     @EntityGraph(attributePaths = {"client", "manager", "car"})
     List<InventoryOrderEntity> findAllBy();
+
+    @EntityGraph(attributePaths = {"client", "manager", "car"})
+    List<InventoryOrderEntity> findByClientIdAndRemovedFalse(UUID clientId);
 }
