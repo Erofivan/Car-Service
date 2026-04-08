@@ -44,3 +44,4 @@ bin/
 ### Environment ###
 .env
 *.puml
+*REF*
