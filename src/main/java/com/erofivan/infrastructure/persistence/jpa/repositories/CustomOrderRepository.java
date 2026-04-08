@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.UUID;
 
 public interface CustomOrderRepository extends JpaRepository<CustomOrderEntity, UUID> {
-
     @EntityGraph(attributePaths = {"client", "manager", "model"})
     List<CustomOrderEntity> findAllBy();
 }

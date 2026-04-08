@@ -3,17 +3,21 @@ package com.erofivan.infrastructure.persistence.jpa.specifications;
 import com.erofivan.domain.models.CarEntity;
 import com.erofivan.domain.models.ModelComponentOptionEntity;
 import jakarta.persistence.criteria.Subquery;
+import org.jetbrains.annotations.Contract;
+import org.jspecify.annotations.NonNull;
 import org.springframework.data.jpa.domain.Specification;
 
 public final class CarJpaSpecifications {
     private CarJpaSpecifications() {
     }
 
-    public static Specification<CarEntity> notRemoved() {
+    @Contract(pure = true)
+    public static @NonNull Specification<CarEntity> notRemoved() {
         return (root, query, cb) -> cb.isFalse(root.get("removed"));
     }
 
-    public static Specification<CarEntity> hasBrandCode(String brandCode) {
+    @Contract(pure = true)
+    public static @NonNull Specification<CarEntity> hasBrandCode(String brandCode) {
         return (root, query, cb) -> {
             if (brandCode == null || brandCode.isBlank()) {
                 return cb.conjunction();
@@ -22,7 +26,8 @@ public final class CarJpaSpecifications {
         };
     }
 
-    public static Specification<CarEntity> hasModelCode(String modelCode) {
+    @Contract(pure = true)
+    public static @NonNull Specification<CarEntity> hasModelCode(String modelCode) {
         return (root, query, cb) -> {
             if (modelCode == null || modelCode.isBlank()) {
                 return cb.conjunction();
@@ -31,7 +36,8 @@ public final class CarJpaSpecifications {
         };
     }
 
-    public static Specification<CarEntity> hasBodyType(String bodyType) {
+    @Contract(pure = true)
+    public static @NonNull Specification<CarEntity> hasBodyType(String bodyType) {
         return (root, query, cb) -> {
             if (bodyType == null || bodyType.isBlank()) {
                 return cb.conjunction();
@@ -40,7 +46,8 @@ public final class CarJpaSpecifications {
         };
     }
 
-    public static Specification<CarEntity> hasFuelType(String fuelType) {
+    @Contract(pure = true)
+    public static @NonNull Specification<CarEntity> hasFuelType(String fuelType) {
         return (root, query, cb) -> {
             if (fuelType == null || fuelType.isBlank()) {
                 return cb.conjunction();
@@ -49,7 +56,8 @@ public final class CarJpaSpecifications {
         };
     }
 
-    public static Specification<CarEntity> hasTransmission(String transmission) {
+    @Contract(pure = true)
+    public static @NonNull Specification<CarEntity> hasTransmission(String transmission) {
         return (root, query, cb) -> {
             if (transmission == null || transmission.isBlank()) {
                 return cb.conjunction();
@@ -58,7 +66,8 @@ public final class CarJpaSpecifications {
         };
     }
 
-    public static Specification<CarEntity> hasDrivetrain(String drivetrain) {
+    @Contract(pure = true)
+    public static @NonNull Specification<CarEntity> hasDrivetrain(String drivetrain) {
         return (root, query, cb) -> {
             if (drivetrain == null || drivetrain.isBlank()) {
                 return cb.conjunction();
@@ -67,7 +76,8 @@ public final class CarJpaSpecifications {
         };
     }
 
-    public static Specification<CarEntity> hasColor(String color) {
+    @Contract(pure = true)
+    public static @NonNull Specification<CarEntity> hasColor(String color) {
         return (root, query, cb) -> {
             if (color == null || color.isBlank()) {
                 return cb.conjunction();
@@ -76,7 +86,8 @@ public final class CarJpaSpecifications {
         };
     }
 
-    public static Specification<CarEntity> hasPriceBetween(Long minPrice, Long maxPrice) {
+    @Contract(pure = true)
+    public static @NonNull Specification<CarEntity> hasPriceBetween(Long minPrice, Long maxPrice) {
         return (root, query, cb) -> {
             if (minPrice != null && maxPrice != null) {
                 return cb.between(root.get("price"), minPrice, maxPrice);
@@ -91,7 +102,8 @@ public final class CarJpaSpecifications {
         };
     }
 
-    public static Specification<CarEntity> hasPowerHpBetween(Integer minPower, Integer maxPower) {
+    @Contract(pure = true)
+    public static @NonNull Specification<CarEntity> hasPowerHpBetween(Integer minPower, Integer maxPower) {
         return (root, query, cb) -> {
             if (minPower != null && maxPower != null) {
                 return cb.between(root.get("powerHp"), minPower, maxPower);
@@ -106,7 +118,8 @@ public final class CarJpaSpecifications {
         };
     }
 
-    public static Specification<CarEntity> hasEngineLitresBetween(Double minEngine, Double maxEngine) {
+    @Contract(pure = true)
+    public static @NonNull Specification<CarEntity> hasEngineLitresBetween(Double minEngine, Double maxEngine) {
         return (root, query, cb) -> {
             if (minEngine != null && maxEngine != null) {
                 return cb.between(root.get("engineLitres"), minEngine, maxEngine);
@@ -121,7 +134,8 @@ public final class CarJpaSpecifications {
         };
     }
 
-    public static Specification<CarEntity> hasComponentName(String componentName) {
+    @Contract(pure = true)
+    public static @NonNull Specification<CarEntity> hasComponentName(String componentName) {
         return (root, query, cb) -> {
             if (componentName == null || componentName.isBlank()) {
                 return cb.conjunction();
@@ -139,7 +153,8 @@ public final class CarJpaSpecifications {
         };
     }
 
-    public static Specification<CarEntity> byFilters(
+    public static @NonNull Specification<CarEntity>
+    byFilters(
         String brandCode,
         String modelCode,
         String bodyType,

@@ -21,6 +21,7 @@ import com.erofivan.presentation.dtos.responses.ConfigurationResponse;
 import com.erofivan.presentation.dtos.responses.CustomOrderResponse;
 import com.erofivan.presentation.dtos.responses.InventoryOrderResponse;
 import lombok.RequiredArgsConstructor;
+import org.jspecify.annotations.NonNull;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -58,7 +59,7 @@ public class OrderCatalogService implements OrderService {
     }
 
     @Transactional
-    public InventoryOrderResponse placeInventoryOrder(PlaceInventoryOrderRequest request) {
+    public InventoryOrderResponse placeInventoryOrder(@NonNull PlaceInventoryOrderRequest request) {
         if (request.clientId() == null)
             throw new DomainValidationException("clientId is required");
 
@@ -95,7 +96,7 @@ public class OrderCatalogService implements OrderService {
     }
 
     @Transactional
-    public CustomOrderResponse placeCustomOrder(PlaceCustomOrderRequest request) {
+    public CustomOrderResponse placeCustomOrder(@NonNull PlaceCustomOrderRequest request) {
         if (request.clientId() == null)
             throw new DomainValidationException("clientId is required");
 

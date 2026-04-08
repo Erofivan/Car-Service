@@ -5,6 +5,8 @@ import com.erofivan.domain.models.PartEntity;
 import com.erofivan.infrastructure.persistence.jpa.repositories.PartRepository;
 import com.erofivan.presentation.dtos.responses.PartResponse;
 import lombok.RequiredArgsConstructor;
+import org.jetbrains.annotations.Contract;
+import org.jspecify.annotations.NonNull;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,7 +22,8 @@ public class PartCatalogService implements PartService {
             .toList();
     }
 
-    private PartResponse toResponse(PartEntity entity) {
+    @Contract("_ -> new")
+    private @NonNull PartResponse toResponse(@NonNull PartEntity entity) {
         return new PartResponse(entity.getId(), entity.getName(), entity.getDescription(), entity.getPrice());
     }
 }

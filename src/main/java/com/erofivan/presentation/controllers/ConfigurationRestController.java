@@ -4,6 +4,7 @@ import com.erofivan.application.core.services.ConfigurationCatalogService;
 import com.erofivan.presentation.dtos.requests.BuildConfigurationRequest;
 import com.erofivan.presentation.dtos.responses.ConfigurationResponse;
 import lombok.RequiredArgsConstructor;
+import org.jspecify.annotations.NonNull;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -25,7 +26,7 @@ public class ConfigurationRestController {
     @PostMapping("/{modelCode}")
     public ConfigurationResponse buildConfiguration(
         @PathVariable String modelCode,
-        @RequestBody BuildConfigurationRequest request
+        @RequestBody @NonNull BuildConfigurationRequest request
     ) {
         return configurationCatalogService.buildConfiguration(modelCode, request.optionIds());
     }

@@ -13,6 +13,7 @@ import com.erofivan.infrastructure.persistence.jpa.repositories.UserRepository;
 import com.erofivan.presentation.dtos.requests.ScheduleTestDriveRequest;
 import com.erofivan.presentation.dtos.responses.TestDriveResponse;
 import lombok.RequiredArgsConstructor;
+import org.jspecify.annotations.NonNull;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -36,7 +37,7 @@ public class TestDriveCatalogService implements TestDriveService {
     }
 
     @Transactional
-    public TestDriveResponse schedule(ScheduleTestDriveRequest request) {
+    public TestDriveResponse schedule(@NonNull ScheduleTestDriveRequest request) {
         if (request.clientId() == null)
             throw new DomainValidationException("clientId is required");
 
