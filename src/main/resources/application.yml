@@ -15,6 +15,12 @@ spring:
     liquibase:
         change-log: classpath:db/changelog/db.changelog-master.yaml
 
+    security:
+        oauth2:
+            resourceserver:
+                jwt:
+                    issuer-uri: ${KEYCLOAK_ISSUER_URI:http://localhost:8180/realms/erofivan}
+
 springdoc:
     swagger-ui:
         path: /swagger-ui.html
