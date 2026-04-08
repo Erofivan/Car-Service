@@ -1,0 +1,119 @@
+{
+    "realm": "erofivan",
+    "enabled": true,
+    "sslRequired": "none",
+    "roles": {
+        "realm": [
+            {
+                "name": "USER",
+                "description": "Клиент автосалона"
+            },
+            {
+                "name": "MANAGER",
+                "description": "Менеджер автосалона"
+            },
+            {
+                "name": "WAREHOUSE_ADMIN",
+                "description": "Администратор склада"
+            },
+            {
+                "name": "ADMIN",
+                "description": "Администратор системы"
+            }
+        ]
+    },
+    "clients": [
+        {
+            "clientId": "erofivan-app",
+            "enabled": true,
+            "publicClient": true,
+            "directAccessGrantsEnabled": true,
+            "redirectUris": [
+                "*"
+            ],
+            "webOrigins": [
+                "*"
+            ],
+            "protocol": "openid-connect",
+            "standardFlowEnabled": true
+        }
+    ],
+    "users": [
+        {
+            "id": "50000000-0000-0000-0000-000000000001",
+            "username": "client-user",
+            "email": "client@erofivan.com",
+            "firstName": "Иван",
+            "lastName": "Клиентов",
+            "enabled": true,
+            "emailVerified": true,
+            "credentials": [
+                {
+                    "type": "password",
+                    "value": "password",
+                    "temporary": false
+                }
+            ],
+            "realmRoles": [
+                "USER"
+            ]
+        },
+        {
+            "id": "50000000-0000-0000-0000-000000000002",
+            "username": "manager-user",
+            "email": "manager@erofivan.com",
+            "firstName": "Пётр",
+            "lastName": "Менеджеров",
+            "enabled": true,
+            "emailVerified": true,
+            "credentials": [
+                {
+                    "type": "password",
+                    "value": "password",
+                    "temporary": false
+                }
+            ],
+            "realmRoles": [
+                "MANAGER"
+            ]
+        },
+        {
+            "id": "50000000-0000-0000-0000-000000000003",
+            "username": "warehouse-user",
+            "email": "warehouse@erofivan.com",
+            "firstName": "Склад",
+            "lastName": "Складов",
+            "enabled": true,
+            "emailVerified": true,
+            "credentials": [
+                {
+                    "type": "password",
+                    "value": "password",
+                    "temporary": false
+                }
+            ],
+            "realmRoles": [
+                "WAREHOUSE_ADMIN"
+            ]
+        },
+        {
+            "id": "50000000-0000-0000-0000-000000000004",
+            "username": "admin-user",
+            "email": "admin@erofivan.com",
+            "firstName": "Админ",
+            "lastName": "Системный",
+            "enabled": true,
+            "emailVerified": true,
+            "credentials": [
+                {
+                    "type": "password",
+                    "value": "password",
+                    "temporary": false
+                }
+            ],
+            "realmRoles": [
+                "ADMIN"
+            ]
+        }
+    ]
+}
