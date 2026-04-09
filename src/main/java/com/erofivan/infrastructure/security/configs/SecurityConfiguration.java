@@ -1,5 +1,6 @@
-package com.erofivan.infrastructure.security;
+package com.erofivan.infrastructure.security.configs;
 
+import com.erofivan.infrastructure.security.JwtRoleConverter;
 import org.jspecify.annotations.NonNull;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -12,10 +13,10 @@ import org.springframework.security.web.SecurityFilterChain;
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
-public class SecurityConfig {
+public class SecurityConfiguration {
     private final JwtRoleConverter jwtRoleConverter;
 
-    public SecurityConfig(JwtRoleConverter jwtRoleConverter) {
+    public SecurityConfiguration(JwtRoleConverter jwtRoleConverter) {
         this.jwtRoleConverter = jwtRoleConverter;
     }
 

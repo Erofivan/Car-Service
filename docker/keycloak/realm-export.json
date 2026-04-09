@@ -1,7 +1,7 @@
 {
     "realm": "erofivan",
     "enabled": true,
-    "sslRequired": "none",
+    "sslRequired": "external",
     "roles": {
         "realm": [
             {
@@ -26,13 +26,15 @@
         {
             "clientId": "erofivan-app",
             "enabled": true,
-            "publicClient": true,
+            "publicClient": false,
+            "clientAuthenticatorType": "client-secret",
+            "secret": "dev-secret",
             "directAccessGrantsEnabled": true,
             "redirectUris": [
-                "*"
+                "http://localhost:8080/*"
             ],
             "webOrigins": [
-                "*"
+                "http://localhost:8080"
             ],
             "protocol": "openid-connect",
             "standardFlowEnabled": true
