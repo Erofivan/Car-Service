@@ -14,7 +14,7 @@ public class OrderAuthorizationsEvaluator {
 
     private final InventoryOrderRepository inventoryOrderRepository;
     private final CustomOrderRepository customOrderRepository;
-    private final SecurityUtils securityUtils;
+    private final SecurityCurrentUserProvider securityUtils;
 
     @Transactional(readOnly = true)
     public boolean isInventoryOrderOwner(UUID orderId) {
