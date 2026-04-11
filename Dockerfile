@@ -4,11 +4,14 @@ WORKDIR /workspace
 COPY gradle gradle
 COPY gradlew .
 COPY settings.gradle build.gradle ./
+
+RUN chmod +x gradlew \
+	&& ./gradlew --no-daemon dependencies --configuration compileClasspath
+
 COPY src src
 COPY config config
 
-RUN chmod +x gradlew \
-	&& ./gradlew --no-daemon clean bootJar \
+RUN ./gradlew --no-daemon clean bootJar \
 		-x test \
 		-x integrationTest \
 		-x checkstyleMain \

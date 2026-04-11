@@ -1,14 +1,14 @@
 -- liquibase formatted sql
 
--- changeset ivanerofeev:0001-create-brands
-CREATE TABLE brands
+-- changeset ivanerofeev:0004-create-users
+CREATE TABLE users
 (
     id         UUID PRIMARY KEY,
     created_at TIMESTAMP WITH TIME ZONE NOT NULL,
     updated_at TIMESTAMP WITH TIME ZONE NOT NULL,
     removed    BOOLEAN                  NOT NULL DEFAULT FALSE,
-    code       VARCHAR(64)              NOT NULL UNIQUE,
-    name       VARCHAR(128)             NOT NULL
+    full_name  VARCHAR(128)             NOT NULL,
+    role       VARCHAR(32)              NOT NULL
 );
 
--- rollback DROP TABLE brands;
+-- rollback DROP TABLE users;
