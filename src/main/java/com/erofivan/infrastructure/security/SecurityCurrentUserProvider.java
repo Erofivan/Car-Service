@@ -18,7 +18,7 @@ public class SecurityCurrentUserProvider implements CurrentUserProvider {
     }
 
     @Override
-    public Boolean hasRole(String role) {
+    public boolean hasRole(String role) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         return auth.getAuthorities().stream()
             .anyMatch(a -> a.getAuthority().equals("ROLE_" + role));

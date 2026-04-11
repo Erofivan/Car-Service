@@ -20,7 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -78,23 +78,21 @@ public class ConfigurationCatalogService implements ConfigurationService {
             .map(link -> link.getComponentOption().getSlotName())
             .collect(Collectors.toSet());
 
-        Map<UUID, ModelComponentOptionEntity> compatibleOptions = allLinks.stream()
-            .collect(Collectors.toMap(
-                link -> link.getComponentOption().getId(),
-                link -> link,
-                (a, b) -> a
-            ));
+        Set<UUID> compatibleOptionIds = allLinks.stream()
+            .map(link -> link.getComponentOption().getId())
+            .collect(Collectors.toSet());
 
         List<ConfigurationOption> selectedOptions = new ArrayList<>();
         Set<String> coveredSlots = new HashSet<>();
 
         long totalSurcharge = 0;
 
-        for (UUID optionId : optionIds) {
-            ComponentOptionEntity option = componentOptionRepository.findById(optionId)
-                .orElseThrow(() -> new EntityNotFoundException("ComponentOption", optionId.toString()));
+        for (@NonNull UUID optionId : optionIds) {
+            UUID nonNullOptionId = Objects.requireNonNull(optionId, "optionId is required");
+            ComponentOptionEntity option = componentOptionRepository.findById(nonNullOptionId)
+                .orElseThrow(() -> new EntityNotFoundException("ComponentOption", nonNullOptionId.toString()));
 
-            if (!compatibleOptions.containsKey(optionId)) {
+            if (!compatibleOptionIds.contains(nonNullOptionId)) {
                 throw new IncompatibleComponentException(option.getName(), modelCode);
             }
 
