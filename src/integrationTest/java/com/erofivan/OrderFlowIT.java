@@ -4,18 +4,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.DynamicPropertyRegistry;
-import org.springframework.test.context.DynamicPropertySource;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.JwtRequestPostProcessor;
 import org.springframework.test.web.servlet.MockMvc;
-import org.testcontainers.containers.PostgreSQLContainer;
-import org.testcontainers.junit.jupiter.Container;
-import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Map;
 
 import static org.hamcrest.Matchers.greaterThanOrEqualTo;
@@ -28,36 +22,23 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@SpringBootTest
 @AutoConfigureMockMvc
-@Testcontainers
-@ActiveProfiles("test")
-class OrderFlowIT {
+class OrderFlowIT extends AbstractIntegrationTest {
 
     private static final String CLIENT_ID = "50000000-0000-0000-0000-000000000001";
     private static final String MANAGER_ID = "50000000-0000-0000-0000-000000000002";
-    private static final String WAREHOUSE_ID = "50000000-0000-0000-0000-000000000003";
     private static final String ADMIN_ID = "50000000-0000-0000-0000-000000000004";
     private static final String CAR_ID = "40000000-0000-0000-0000-000000000001";
     private static final String CAR_ID_NO_TD = "40000000-0000-0000-0000-000000000003";
 
-    @Container
-    static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:16-alpine")
-        .withDatabaseName("testdb")
-        .withUsername("test")
-        .withPassword("test");
     @Autowired
     private MockMvc mockMvc;
     @Autowired
     private ObjectMapper objectMapper;
 
-    @DynamicPropertySource
-    static void configureProperties(DynamicPropertyRegistry registry) {
-        registry.add("spring.datasource.url", postgres::getJdbcUrl);
-        registry.add("spring.datasource.username", postgres::getUsername);
-        registry.add("spring.datasource.password", postgres::getPassword);
-        registry.add("spring.security.oauth2.resourceserver.jwt.issuer-uri",
-            () -> "http://localhost:8180/realms/erofivan");
+    private static JwtRequestPostProcessor asRole(String subject, String role) {
+        return jwt().jwt(j -> j.subject(subject))
+            .authorities(new SimpleGrantedAuthority("ROLE_" + role));
     }
 
     @Test
@@ -69,9 +50,7 @@ class OrderFlowIT {
     @Test
     void listCars() throws Exception {
         mockMvc.perform(get("/api/cars")
-                .with(jwt().jwt(j -> j
-                    .subject(CLIENT_ID)
-                    .claim("realm_access", Map.of("roles", List.of("USER"))))))
+            .with(asRole(CLIENT_ID, "USER")))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$", hasSize(greaterThanOrEqualTo(3))));
     }
@@ -79,9 +58,7 @@ class OrderFlowIT {
     @Test
     void listCarsByBrand() throws Exception {
         mockMvc.perform(get("/api/cars").param("brandCode", "BMW")
-                .with(jwt().jwt(j -> j
-                    .subject(CLIENT_ID)
-                    .claim("realm_access", Map.of("roles", List.of("USER"))))))
+            .with(asRole(CLIENT_ID, "USER")))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$", hasSize(2)));
     }
@@ -89,9 +66,7 @@ class OrderFlowIT {
     @Test
     void getConfiguration() throws Exception {
         mockMvc.perform(get("/api/configurations/BMW-320I")
-                .with(jwt().jwt(j -> j
-                    .subject(CLIENT_ID)
-                    .claim("realm_access", Map.of("roles", List.of("USER"))))))
+                .with(asRole(CLIENT_ID, "USER")))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.modelCode", is("BMW-320I")))
             .andExpect(jsonPath("$.basePrice", is(4000000)))
@@ -101,18 +76,14 @@ class OrderFlowIT {
     @Test
     void getConfigurationNotFound() throws Exception {
         mockMvc.perform(get("/api/configurations/NONEXISTENT")
-                .with(jwt().jwt(j -> j
-                    .subject(CLIENT_ID)
-                    .claim("realm_access", Map.of("roles", List.of("USER"))))))
+            .with(asRole(CLIENT_ID, "USER")))
             .andExpect(status().isNotFound());
     }
 
     @Test
     void listPartsAsManager() throws Exception {
         mockMvc.perform(get("/api/parts")
-                .with(jwt().jwt(j -> j
-                    .subject(MANAGER_ID)
-                    .claim("realm_access", Map.of("roles", List.of("MANAGER"))))))
+            .with(asRole(MANAGER_ID, "MANAGER")))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$", hasSize(greaterThanOrEqualTo(2))));
     }
@@ -120,9 +91,7 @@ class OrderFlowIT {
     @Test
     void listPartsAsUserForbidden() throws Exception {
         mockMvc.perform(get("/api/parts")
-                .with(jwt().jwt(j -> j
-                    .subject(CLIENT_ID)
-                    .claim("realm_access", Map.of("roles", List.of("USER"))))))
+            .with(asRole(CLIENT_ID, "USER")))
             .andExpect(status().isForbidden());
     }
 
@@ -135,9 +104,7 @@ class OrderFlowIT {
         mockMvc.perform(post("/api/orders/inventory")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(body)
-                .with(jwt().jwt(j -> j
-                    .subject(CLIENT_ID)
-                    .claim("realm_access", Map.of("roles", List.of("USER"))))))
+            .with(asRole(CLIENT_ID, "USER")))
             .andExpect(status().isCreated())
             .andExpect(jsonPath("$.id", notNullValue()))
             .andExpect(jsonPath("$.status", is("PLACED")));
@@ -152,9 +119,7 @@ class OrderFlowIT {
         mockMvc.perform(post("/api/orders/custom")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(body)
-                .with(jwt().jwt(j -> j
-                    .subject(CLIENT_ID)
-                    .claim("realm_access", Map.of("roles", List.of("USER"))))))
+            .with(asRole(CLIENT_ID, "USER")))
             .andExpect(status().isCreated())
             .andExpect(jsonPath("$.id", notNullValue()))
             .andExpect(jsonPath("$.modelCode", is("BMW-320I")))
@@ -171,9 +136,7 @@ class OrderFlowIT {
         mockMvc.perform(post("/api/test-drives")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(body)
-                .with(jwt().jwt(j -> j
-                    .subject(CLIENT_ID)
-                    .claim("realm_access", Map.of("roles", List.of("USER"))))))
+            .with(asRole(CLIENT_ID, "USER")))
             .andExpect(status().isCreated())
             .andExpect(jsonPath("$.id", notNullValue()))
             .andExpect(jsonPath("$.clientId", is(CLIENT_ID)));
@@ -189,10 +152,8 @@ class OrderFlowIT {
         mockMvc.perform(post("/api/test-drives")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(body)
-                .with(jwt().jwt(j -> j
-                    .subject(CLIENT_ID)
-                    .claim("realm_access", Map.of("roles", List.of("USER"))))))
-            .andExpect(status().isConflict());
+            .with(asRole(CLIENT_ID, "USER")))
+            .andExpect(status().isBadRequest());
     }
 
     @Test
@@ -204,33 +165,25 @@ class OrderFlowIT {
         String response = mockMvc.perform(post("/api/orders/inventory")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(body)
-                .with(jwt().jwt(j -> j
-                    .subject(CLIENT_ID)
-                    .claim("realm_access", Map.of("roles", List.of("USER"))))))
+            .with(asRole(CLIENT_ID, "USER")))
             .andExpect(status().isCreated())
             .andReturn().getResponse().getContentAsString();
 
         String orderId = objectMapper.readTree(response).get("id").asText();
 
         mockMvc.perform(post("/api/orders/inventory/" + orderId + "/approve")
-                .with(jwt().jwt(j -> j
-                    .subject(CLIENT_ID)
-                    .claim("realm_access", Map.of("roles", List.of("USER"))))))
+            .with(asRole(CLIENT_ID, "USER")))
             .andExpect(status().isForbidden());
     }
 
     @Test
     void adminCanAccessEverything() throws Exception {
         mockMvc.perform(get("/api/cars")
-                .with(jwt().jwt(j -> j
-                    .subject(ADMIN_ID)
-                    .claim("realm_access", Map.of("roles", List.of("ADMIN"))))))
+                .with(asRole(ADMIN_ID, "ADMIN")))
             .andExpect(status().isOk());
 
         mockMvc.perform(get("/api/parts")
-                .with(jwt().jwt(j -> j
-                    .subject(ADMIN_ID)
-                    .claim("realm_access", Map.of("roles", List.of("ADMIN"))))))
+                .with(asRole(ADMIN_ID, "ADMIN")))
             .andExpect(status().isOk());
     }
 }

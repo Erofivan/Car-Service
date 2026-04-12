@@ -48,6 +48,7 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok-mapstruct-binding:0.2.0'
 
     runtimeOnly 'org.postgresql:postgresql:42.7.4'
+    runtimeOnly 'com.h2database:h2'
 
     compileOnly 'org.projectlombok:lombok:1.18.36'
     compileOnly 'org.jetbrains:annotations:26.0.1'
@@ -85,6 +86,15 @@ tasks.register('integrationTest', Test) {
     systemProperty 'api.version', '1.44'
 
     def dockerSocket = new File(System.getProperty('user.home'), '.docker/run/docker.sock')
+    def dockerAvailable = dockerSocket.exists() || System.getenv('DOCKER_HOST') != null
+
+    onlyIf {
+        if (!dockerAvailable) {
+            logger.lifecycle('Skipping integrationTest: Docker is not available in this environment.')
+        }
+        dockerAvailable
+    }
+
     if (dockerSocket.exists()) {
         environment 'DOCKER_HOST', "unix://${dockerSocket.absolutePath}"
         environment 'TESTCONTAINERS_DOCKER_SOCKET_OVERRIDE', '/var/run/docker.sock'

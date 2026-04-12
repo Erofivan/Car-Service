@@ -13,7 +13,6 @@ import com.erofivan.infrastructure.persistence.jpa.repositories.ModelRepository;
 import com.erofivan.presentation.dtos.ConfigurationOption;
 import com.erofivan.presentation.dtos.responses.ConfigurationResponse;
 import lombok.RequiredArgsConstructor;
-import org.jspecify.annotations.NonNull;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -66,7 +65,11 @@ public class ConfigurationCatalogService implements ConfigurationService {
         );
     }
 
-    public ConfigurationResponse buildConfiguration(String modelCode, @NonNull List<UUID> optionIds) {
+    public ConfigurationResponse buildConfiguration(String modelCode, List<UUID> optionIds) {
+        if (optionIds == null || optionIds.isEmpty()) {
+            return getDefaultConfiguration(modelCode);
+        }
+
         ModelEntity model = modelRepository.findByCodeAndRemovedFalse(modelCode)
             .orElseThrow(() -> new EntityNotFoundException("Model", modelCode));
 
@@ -87,7 +90,7 @@ public class ConfigurationCatalogService implements ConfigurationService {
 
         long totalSurcharge = 0;
 
-        for (@NonNull UUID optionId : optionIds) {
+        for (UUID optionId : optionIds) {
             UUID nonNullOptionId = Objects.requireNonNull(optionId, "optionId is required");
             ComponentOptionEntity option = componentOptionRepository.findById(nonNullOptionId)
                 .orElseThrow(() -> new EntityNotFoundException("ComponentOption", nonNullOptionId.toString()));
