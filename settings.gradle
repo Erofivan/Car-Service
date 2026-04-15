@@ -1,1 +1,6 @@
 rootProject.name = 'java-template'
+include 'OrderService'
+include 'StorageService'
+
+project(':OrderService').projectDir = file('services/OrderService')
+project(':StorageService').projectDir = file('services/StorageService')
