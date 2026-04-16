@@ -17,10 +17,10 @@ import java.util.UUID;
 @AllArgsConstructor
 @EqualsAndHashCode
 @Embeddable
-public class ModelComponentOptionId implements Serializable {
-    @Column(name = "model_id", nullable = false)
-    private UUID modelId;
+public class AssemblyOrderEntityId implements Serializable {
+    @Column(name = "assembly_id", nullable = false)
+    private UUID assemblyId;
 
-    @Column(name = "component_option_id", nullable = false)
-    private UUID componentOptionId;
+    @Column(name = "source_order_id", nullable = false)
+    private UUID sourceOrderId;
 }
