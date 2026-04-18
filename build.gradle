@@ -40,18 +40,23 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.liquibase:liquibase-core'
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.6'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
 
     implementation 'org.mapstruct:mapstruct:1.6.3'
     annotationProcessor 'org.mapstruct:mapstruct-processor:1.6.3'
     annotationProcessor 'org.projectlombok:lombok-mapstruct-binding:0.2.0'
 
     runtimeOnly 'org.postgresql:postgresql:42.7.4'
+    runtimeOnly 'com.h2database:h2'
 
     compileOnly 'org.projectlombok:lombok:1.18.36'
+    compileOnly 'org.jetbrains:annotations:26.0.1'
     annotationProcessor 'org.projectlombok:lombok:1.18.36'
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.boot:spring-boot-testcontainers'
+    testImplementation 'org.springframework.security:spring-security-test'
     testCompileOnly 'org.projectlombok:lombok:1.18.36'
     testAnnotationProcessor 'org.projectlombok:lombok:1.18.36'
     testImplementation 'org.testcontainers:junit-jupiter:1.21.0'
@@ -59,6 +64,7 @@ dependencies {
 
     integrationTestImplementation 'org.springframework.boot:spring-boot-starter-test'
     integrationTestImplementation 'org.springframework.boot:spring-boot-testcontainers'
+    integrationTestImplementation 'org.springframework.security:spring-security-test'
     integrationTestImplementation 'org.testcontainers:junit-jupiter:1.21.0'
     integrationTestImplementation 'org.testcontainers:postgresql:1.21.0'
 }
@@ -80,6 +86,15 @@ tasks.register('integrationTest', Test) {
     systemProperty 'api.version', '1.44'
 
     def dockerSocket = new File(System.getProperty('user.home'), '.docker/run/docker.sock')
+    def dockerAvailable = dockerSocket.exists() || System.getenv('DOCKER_HOST') != null
+
+    onlyIf {
+        if (!dockerAvailable) {
+            logger.lifecycle('Skipping integrationTest: Docker is not available in this environment.')
+        }
+        dockerAvailable
+    }
+
     if (dockerSocket.exists()) {
         environment 'DOCKER_HOST', "unix://${dockerSocket.absolutePath}"
         environment 'TESTCONTAINERS_DOCKER_SOCKET_OVERRIDE', '/var/run/docker.sock'

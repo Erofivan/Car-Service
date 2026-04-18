@@ -9,6 +9,12 @@ spring:
         open-in-view: false
     liquibase:
         change-log: classpath:db/changelog/db.changelog-master.yaml
+    security:
+        oauth2:
+            resourceserver:
+                jwt:
+                    issuer-uri: http://localhost:8180/realms/erofivan
+                    jwk-set-uri: http://localhost:8180/realms/erofivan/protocol/openid-connect/certs
 
 springdoc:
     api-docs:
