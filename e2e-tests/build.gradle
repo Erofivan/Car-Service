@@ -35,7 +35,7 @@ dependencies {
 }
 
 tasks.register('composeUp', Exec) {
-    dependsOn ':OrderService:bootJar', ':StorageService:bootJar'
+    dependsOn ':order-service:bootJar', ':storage-service:bootJar'
     workingDir = rootProject.projectDir
     commandLine 'docker', 'compose', 'up', '-d', '--build'
 }

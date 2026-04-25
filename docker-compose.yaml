@@ -1,7 +1,7 @@
 services:
     order-service:
         build:
-            context: services/OrderService
+            context: services/order-service
             dockerfile: Dockerfile
         ports:
             - "8081:8081"
@@ -22,7 +22,7 @@ services:
 
     storage-service:
         build:
-            context: services/StorageService
+            context: services/storage-service
             dockerfile: Dockerfile
         ports:
             - "8082:8082"
@@ -104,7 +104,7 @@ services:
 
     keycloak-init:
         image: quay.io/keycloak/keycloak:26.0
-        entrypoint: ["/bin/sh", "-c"]
+        entrypoint: [ "/bin/sh", "-c" ]
         depends_on:
             keycloak:
                 condition: service_healthy
