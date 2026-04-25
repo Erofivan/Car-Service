@@ -1,58 +1,122 @@
 services:
-    postgres:
-        image: postgres:16-alpine
-        container_name: erofivan-postgres
+    order-service:
+        build:
+            context: services/OrderService
+            dockerfile: Dockerfile
+        ports:
+            - "8081:8081"
         environment:
-            POSTGRES_DB: ${POSTGRES_DB}
+            SERVER_PORT: 8081
+            DB_URL: jdbc:postgresql://order-db:5432/order_db
+            DB_USERNAME: test
+            DB_PASSWORD: test
+            KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+            STORAGE_SERVICE_BASE_URL: http://storage-service:8082
+            KEYCLOAK_ISSUER_URI: http://localhost:8180/realms/erofivan
+            KEYCLOAK_JWK_SET_URI: http://keycloak:8080/realms/erofivan/protocol/openid-connect/certs
+        depends_on:
+            order-db:
+                condition: service_healthy
+            kafka:
+                condition: service_healthy
+
+    storage-service:
+        build:
+            context: services/StorageService
+            dockerfile: Dockerfile
+        ports:
+            - "8082:8082"
+        environment:
+            SERVER_PORT: 8082
+            DB_URL: jdbc:postgresql://storage-db:5432/storage_db
+            DB_USERNAME: test
+            DB_PASSWORD: test
+            KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+            KEYCLOAK_ISSUER_URI: http://localhost:8180/realms/erofivan
+            KEYCLOAK_JWK_SET_URI: http://keycloak:8080/realms/erofivan/protocol/openid-connect/certs
+        depends_on:
+            storage-db:
+                condition: service_healthy
+            kafka:
+                condition: service_healthy
+
+    order-db:
+        image: postgres:16
+        environment:
+            POSTGRES_DB: order_db
             POSTGRES_USER: ${POSTGRES_USER}
             POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-        ports:
-            - "127.0.0.1:5432:5432"
-        volumes:
-            - postgres-data:/var/lib/postgresql/data
         healthcheck:
-            test: [ "CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}" ]
+            test: [ "CMD-SHELL", "pg_isready -U test -d order_db" ]
             interval: 5s
-            timeout: 3s
+            timeout: 5s
+            retries: 5
+
+    storage-db:
+        image: postgres:16
+        environment:
+            POSTGRES_DB: storage_db
+            POSTGRES_USER: ${POSTGRES_USER}
+            POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+        healthcheck:
+            test: [ "CMD-SHELL", "pg_isready -U test -d storage_db" ]
+            interval: 5s
+            timeout: 5s
+            retries: 5
+
+    kafka:
+        image: apache/kafka:3.9.0
+        environment:
+            KAFKA_NODE_ID: 1
+            KAFKA_PROCESS_ROLES: broker,controller
+            KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092,CONTROLLER://0.0.0.0:9093
+            KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092,CONTROLLER://kafka:9093
+            KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,CONTROLLER:PLAINTEXT
+            KAFKA_CONTROLLER_QUORUM_VOTERS: 1@kafka:9093
+            KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
+            KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+            KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+            KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+            KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+            CLUSTER_ID: MkU3OEVBNTcwNTJENDM2Qk
+        healthcheck:
+            test: [ "CMD-SHELL", "/opt/kafka/bin/kafka-broker-api-versions.sh --bootstrap-server localhost:9092" ]
+            interval: 10s
+            timeout: 10s
             retries: 5
 
     keycloak:
         image: quay.io/keycloak/keycloak:26.0
-        container_name: erofivan-keycloak
         command: start-dev --import-realm
+        ports:
+            - "8180:8080"
         environment:
             KC_BOOTSTRAP_ADMIN_USERNAME: ${KC_BOOTSTRAP_ADMIN_USERNAME}
             KC_BOOTSTRAP_ADMIN_PASSWORD: ${KC_BOOTSTRAP_ADMIN_PASSWORD}
-        ports:
-            - "127.0.0.1:8180:8080"
         volumes:
-            - ./keycloak/realm-export.json:/opt/keycloak/data/import/realm-export.json:ro
+            - ./keycloak/realm-export.json:/opt/keycloak/data/import/realm-export.json
         healthcheck:
-            test: [ "CMD-SHELL", "bash -lc \"exec 3<>/dev/tcp/127.0.0.1/8080; printf 'GET /realms/erofivan/.well-known/openid-configuration HTTP/1.1\\r\\nHost: localhost\\r\\nConnection: close\\r\\n\\r\\n' >&3; grep -q '200' <&3\"" ]
+            test: [ "CMD-SHELL", "bash -lc \"exec 3<>/dev/tcp/127.0.0.1/8080; printf 'GET /realms/master/.well-known/openid-configuration HTTP/1.1\\r\\nHost: localhost\\r\\nConnection: close\\r\\n\\r\\n' >&3; grep -q '200' <&3\"" ]
             interval: 10s
             timeout: 5s
             retries: 15
             start_period: 30s
 
-    app:
-        build:
-            context: .
-            dockerfile: Dockerfile
-        container_name: erofivan-app
+    keycloak-init:
+        image: quay.io/keycloak/keycloak:26.0
+        entrypoint: ["/bin/sh", "-c"]
         depends_on:
-            postgres:
-                condition: service_healthy
             keycloak:
                 condition: service_healthy
-        ports:
-            - "127.0.0.1:8080:8080"
+        restart: "no"
         environment:
-            SPRING_PROFILES_ACTIVE: default
-            DB_URL: jdbc:postgresql://postgres:5432/${POSTGRES_DB}
-            DB_USERNAME: ${POSTGRES_USER}
-            DB_PASSWORD: ${POSTGRES_PASSWORD}
-            KEYCLOAK_ISSUER_URI: http://localhost:8180/realms/erofivan
-            KEYCLOAK_JWK_SET_URI: http://keycloak:8080/realms/erofivan/protocol/openid-connect/certs
-
-volumes:
-    postgres-data:
+            KC_BOOTSTRAP_ADMIN_USERNAME: ${KC_BOOTSTRAP_ADMIN_USERNAME}
+            KC_BOOTSTRAP_ADMIN_PASSWORD: ${KC_BOOTSTRAP_ADMIN_PASSWORD}
+        command:
+            - |
+                set -e
+                until /opt/keycloak/bin/kcadm.sh config credentials --server http://keycloak:8080 --realm master --user "$KC_BOOTSTRAP_ADMIN_USERNAME" --password "$KC_BOOTSTRAP_ADMIN_PASSWORD"; do
+                  sleep 2
+                done
+                /opt/keycloak/bin/kcadm.sh update realms/master --server http://keycloak:8080 -s sslRequired=NONE
+                /opt/keycloak/bin/kcadm.sh get realms/master --server http://keycloak:8080 | grep -E '"realm"|"sslRequired"'

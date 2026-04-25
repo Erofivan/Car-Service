@@ -1,6 +1,12 @@
 rootProject.name = 'java-template'
+
 include 'OrderService'
 include 'StorageService'
+include 'contracts'
+include 'e2e-tests'
 
 project(':OrderService').projectDir = file('services/OrderService')
 project(':StorageService').projectDir = file('services/StorageService')
+project(':contracts').projectDir = file('contracts')
+project(':e2e-tests').projectDir = file('e2e-tests')
+

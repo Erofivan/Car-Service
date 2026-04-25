@@ -1,0 +1,46 @@
+spring:
+    application:
+        name: order-service
+    profiles:
+        default: local
+    datasource:
+        url: ${DB_URL:jdbc:postgresql://localhost:5432/order_db}
+        username: ${DB_USERNAME:test}
+        password: ${DB_PASSWORD:test}
+    jpa:
+        hibernate:
+            ddl-auto: validate
+        open-in-view: false
+        properties:
+            hibernate:
+                format_sql: true
+    liquibase:
+        change-log: classpath:db/changelog/db.changelog-master.yaml
+    kafka:
+        bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
+        producer:
+            key-serializer: org.apache.kafka.common.serialization.StringSerializer
+            value-serializer: org.apache.kafka.common.serialization.StringSerializer
+            acks: all
+            retries: 3
+    security:
+        oauth2:
+            resourceserver:
+                jwt:
+                    issuer-uri: ${KEYCLOAK_ISSUER_URI:http://localhost:8180/realms/erofivan}
+                    jwk-set-uri: ${KEYCLOAK_JWK_SET_URI:http://localhost:8180/realms/erofivan/protocol/openid-connect/certs}
+
+springdoc:
+    swagger-ui:
+        path: /swagger-ui.html
+
+server:
+    port: ${SERVER_PORT:8081}
+
+logging:
+    level:
+        org.hibernate.SQL: info
+
+storage:
+    service:
+        base-url: ${STORAGE_SERVICE_BASE_URL:http://localhost:8082}

@@ -1,0 +1,60 @@
+plugins {
+    id 'java'
+    id 'org.springframework.boot' apply false
+    id 'io.spring.dependency-management'
+}
+
+dependencyManagement {
+    imports {
+        mavenBom org.springframework.boot.gradle.plugin.SpringBootPlugin.BOM_COORDINATES
+    }
+}
+
+group = 'com.erofivan'
+version = '1.0-SNAPSHOT'
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testImplementation 'com.fasterxml.jackson.core:jackson-databind:2.18.2'
+    testImplementation 'io.rest-assured:rest-assured:5.5.0'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.springframework.boot:spring-boot-testcontainers'
+    testImplementation 'org.testcontainers:junit-jupiter:1.21.0'
+    testImplementation 'org.testcontainers:postgresql:1.21.0'
+    testImplementation 'org.testcontainers:kafka:1.21.0'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+tasks.register('composeUp', Exec) {
+    dependsOn ':OrderService:bootJar', ':StorageService:bootJar'
+    workingDir = rootProject.projectDir
+    commandLine 'docker', 'compose', 'up', '-d', '--build'
+}
+
+tasks.register('composeDown', Exec) {
+    workingDir = rootProject.projectDir
+    commandLine 'docker', 'compose', 'down'
+}
+
+tasks.named('test') {
+    enabled = false
+}
+
+tasks.register('e2eTest', Test) {
+    description = 'Runs end-to-end tests.'
+    group = 'verification'
+    dependsOn tasks.named('composeUp')
+    finalizedBy tasks.named('composeDown')
+    testClassesDirs = sourceSets.test.output.classesDirs
+    classpath = sourceSets.test.runtimeClasspath
+    useJUnitPlatform()
+}
