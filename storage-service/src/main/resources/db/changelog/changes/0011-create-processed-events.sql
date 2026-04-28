@@ -4,7 +4,7 @@
 
 CREATE TABLE processed_events
 (
-    id           UUID PRIMARY KEY,
+    id           VARCHAR(128) PRIMARY KEY,
     processed_at TIMESTAMP NOT NULL
 );
 

@@ -7,7 +7,7 @@ CREATE TABLE outbox_events
     id           UUID PRIMARY KEY,
     topic        VARCHAR(128) NOT NULL,
     aggregate_id UUID         NOT NULL,
-    payload      TEXT         NOT NULL,
+    payload      JSONB        NOT NULL,
     created_at   TIMESTAMP    NOT NULL,
     published_at TIMESTAMP
 );

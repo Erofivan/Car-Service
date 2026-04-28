@@ -23,6 +23,7 @@ spring:
             value-serializer: org.apache.kafka.common.serialization.StringSerializer
             acks: all
             retries: 3
+            observation-enabled: true
     security:
         oauth2:
             resourceserver:
@@ -40,6 +41,14 @@ server:
 logging:
     level:
         org.hibernate.SQL: info
+
+management:
+    tracing:
+        sampling:
+            probability: 1.0
+    otlp:
+        tracing:
+            endpoint: ${OTEL_EXPORTER_OTLP_ENDPOINT:http://localhost:4318/v1/traces}
 
 storage:
     service:

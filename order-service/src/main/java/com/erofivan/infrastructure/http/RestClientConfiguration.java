@@ -10,9 +10,10 @@ public class RestClientConfiguration {
 
     @Bean
     public RestClient storageServiceRestClient(
+        RestClient.Builder restClientBuilder,
         @Value("${storage.service.base-url}") String baseUrl
     ) {
-        return RestClient.builder()
+        return restClientBuilder
             .baseUrl(baseUrl)
             .build();
     }

@@ -11,6 +11,7 @@ services:
             DB_USERNAME: test
             DB_PASSWORD: test
             KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+            OTEL_EXPORTER_OTLP_ENDPOINT: http://otel-collector:4318/v1/traces
             STORAGE_SERVICE_BASE_URL: http://storage-service:8082
             KEYCLOAK_ISSUER_URI: http://localhost:8180/realms/erofivan
             KEYCLOAK_JWK_SET_URI: http://keycloak:8080/realms/erofivan/protocol/openid-connect/certs
@@ -19,6 +20,8 @@ services:
                 condition: service_healthy
             kafka:
                 condition: service_healthy
+            otel-collector:
+                condition: service_started
 
     storage-service:
         build:
@@ -32,6 +35,7 @@ services:
             DB_USERNAME: test
             DB_PASSWORD: test
             KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+            OTEL_EXPORTER_OTLP_ENDPOINT: http://otel-collector:4318/v1/traces
             KEYCLOAK_ISSUER_URI: http://localhost:8180/realms/erofivan
             KEYCLOAK_JWK_SET_URI: http://keycloak:8080/realms/erofivan/protocol/openid-connect/certs
         depends_on:
@@ -39,6 +43,8 @@ services:
                 condition: service_healthy
             kafka:
                 condition: service_healthy
+            otel-collector:
+                condition: service_started
 
     order-db:
         image: postgres:16
@@ -120,3 +126,48 @@ services:
                 done
                 /opt/keycloak/bin/kcadm.sh update realms/master --server http://keycloak:8080 -s sslRequired=NONE
                 /opt/keycloak/bin/kcadm.sh get realms/master --server http://keycloak:8080 | grep -E '"realm"|"sslRequired"'
+
+    otel-collector:
+        image: otel/opentelemetry-collector-contrib:0.126.0
+        command: [ "--config=/etc/otelcol-contrib/config.yaml" ]
+        volumes:
+            - ./observability/otel-collector-config.yaml:/etc/otelcol-contrib/config.yaml:ro
+        ports:
+            - "4317:4317"
+            - "4318:4318"
+            - "8889:8889"
+        depends_on:
+            tempo:
+                condition: service_started
+
+    tempo:
+        image: grafana/tempo:2.7.2
+        command: [ "-config.file=/etc/tempo.yaml" ]
+        volumes:
+            - ./observability/tempo-config.yaml:/etc/tempo.yaml:ro
+        ports:
+            - "3200:3200"
+
+    prometheus:
+        image: prom/prometheus:v3.3.1
+        command:
+            - "--config.file=/etc/prometheus/prometheus.yml"
+        volumes:
+            - ./observability/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+        ports:
+            - "9090:9090"
+        depends_on:
+            otel-collector:
+                condition: service_started
+
+    grafana:
+        image: grafana/grafana:12.0.1
+        ports:
+            - "3000:3000"
+        volumes:
+            - ./observability/grafana/provisioning:/etc/grafana/provisioning:ro
+        depends_on:
+            tempo:
+                condition: service_started
+            prometheus:
+                condition: service_started

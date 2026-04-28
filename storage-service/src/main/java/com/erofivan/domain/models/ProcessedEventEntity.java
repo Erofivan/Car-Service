@@ -9,7 +9,6 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.Instant;
-import java.util.UUID;
 
 @Getter
 @Setter
@@ -17,8 +16,8 @@ import java.util.UUID;
 @Table(name = "processed_events")
 public class ProcessedEventEntity {
     @Id
-    @Column(nullable = false, updatable = false)
-    private UUID id;
+    @Column(nullable = false, updatable = false, length = 128)
+    private String id;
 
     @Column(nullable = false, updatable = false)
     private Instant processedAt;
