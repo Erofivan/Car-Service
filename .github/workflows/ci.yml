@@ -36,5 +36,8 @@ jobs:
             -   name: Integration tests (Testcontainers)
                 run: ./gradlew --no-daemon integrationTest
 
+            -   name: Prepare environment for e2e tests
+                run: cp .env.example .env
+
             -   name: End-to-end tests
                 run: ./gradlew --no-daemon :e2e-tests:e2eTest
