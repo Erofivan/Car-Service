@@ -1,0 +1,23 @@
+databaseChangeLog:
+    -   include:
+            file: db/changelog/changes/0001-create-brands.sql
+    -   include:
+            file: db/changelog/changes/0002-create-models.sql
+    -   include:
+            file: db/changelog/changes/0003-create-cars.sql
+    -   include:
+            file: db/changelog/changes/0004-create-users.sql
+    -   include:
+            file: db/changelog/changes/0005-create-parts.sql
+    -   include:
+            file: db/changelog/changes/0006-create-part-model-compatibility.sql
+    -   include:
+            file: db/changelog/changes/0007-create-component-options.sql
+    -   include:
+            file: db/changelog/changes/0008-create-model-component-options.sql
+    -   include:
+            file: db/changelog/changes/0009-create-assembly-orders.sql
+    -   include:
+            file: db/changelog/changes/0010-seed-data.sql
+    -   include:
+            file: db/changelog/changes/0011-create-processed-events.sql

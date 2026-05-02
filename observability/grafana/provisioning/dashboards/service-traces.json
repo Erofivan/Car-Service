@@ -1,0 +1,46 @@
+{
+  "title": "Service Traces",
+  "uid": "service-traces",
+  "schemaVersion": 38,
+  "version": 1,
+  "refresh": "10s",
+  "panels": [
+    {
+      "type": "traces",
+      "title": "Trace Explorer",
+      "gridPos": { "x": 0, "y": 0, "w": 24, "h": 16 },
+      "datasource": { "type": "tempo", "uid": "${datasource}" },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": { "type": "tempo", "uid": "${datasource}" },
+          "queryType": "traceql",
+          "query": "{ }"
+        }
+      ]
+    },
+    {
+      "type": "nodeGraph",
+      "title": "Service Map",
+      "gridPos": { "x": 0, "y": 16, "w": 24, "h": 12 },
+      "datasource": { "type": "tempo", "uid": "${datasource}" },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": { "type": "tempo", "uid": "${datasource}" },
+          "queryType": "serviceMap"
+        }
+      ]
+    }
+  ],
+  "templating": {
+    "list": [
+      {
+        "name": "datasource",
+        "type": "datasource",
+        "query": "tempo",
+        "current": { "text": "Tempo", "value": "Tempo" }
+      }
+    ]
+  }
+}

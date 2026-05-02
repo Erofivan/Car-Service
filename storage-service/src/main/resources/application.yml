@@ -1,0 +1,62 @@
+spring:
+    application:
+        name: storage-service
+    profiles:
+        default: local
+    datasource:
+        url: ${DB_URL:jdbc:postgresql://localhost:5432/storage_db}
+        username: ${DB_USERNAME:test}
+        password: ${DB_PASSWORD:test}
+    jpa:
+        hibernate:
+            ddl-auto: validate
+        open-in-view: false
+        properties:
+            hibernate:
+                format_sql: true
+    liquibase:
+        change-log: classpath:db/changelog/db.changelog-master.yaml
+    kafka:
+        bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
+        consumer:
+            group-id: storage-service
+            auto-offset-reset: earliest
+            enable-auto-commit: false
+            observation-enabled: true
+            key-deserializer: org.springframework.kafka.support.serializer.ErrorHandlingDeserializer
+            value-deserializer: org.springframework.kafka.support.serializer.ErrorHandlingDeserializer
+            properties:
+                spring.deserializer.key.delegate.class: org.apache.kafka.common.serialization.StringDeserializer
+                spring.deserializer.value.delegate.class: org.springframework.kafka.support.serializer.JsonDeserializer
+                spring.json.trusted.packages: com.erofivan.contracts.events,com.fasterxml.jackson.databind
+                spring.json.use.type.headers: false
+                spring.json.value.default.type: com.fasterxml.jackson.databind.JsonNode
+    security:
+        oauth2:
+            resourceserver:
+                jwt:
+                    issuer-uri: ${KEYCLOAK_ISSUER_URI:http://localhost:8180/realms/erofivan}
+                    jwk-set-uri: ${KEYCLOAK_JWK_SET_URI:http://localhost:8180/realms/erofivan/protocol/openid-connect/certs}
+
+springdoc:
+    swagger-ui:
+        path: /swagger-ui.html
+
+server:
+    port: ${SERVER_PORT:8082}
+
+logging:
+    level:
+        org.hibernate.SQL: info
+
+management:
+    tracing:
+        sampling:
+            probability: 1.0
+    otlp:
+        tracing:
+            endpoint: ${OTEL_EXPORTER_OTLP_ENDPOINT:http://localhost:4318/v1/traces}
+    endpoints:
+        web:
+            exposure:
+                include: health,info,prometheus
