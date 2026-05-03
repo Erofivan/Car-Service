@@ -9,3 +9,5 @@ databaseChangeLog:
             file: db/changelog/changes/0004-create-test-drive-requests.sql
     -   include:
             file: db/changelog/changes/0005-create-outbox-events.sql
+    -   include:
+            file: db/changelog/changes/0006-seed-data.sql

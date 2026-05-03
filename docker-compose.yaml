@@ -11,7 +11,7 @@ services:
             DB_USERNAME: test
             DB_PASSWORD: test
             KAFKA_BOOTSTRAP_SERVERS: kafka:9092
-            OTEL_EXPORTER_OTLP_ENDPOINT: http://otel-collector:4318/v1/traces
+            OTEL_EXPORTER_OTLP_ENDPOINT: http://otel-collector:4318
             STORAGE_SERVICE_BASE_URL: http://storage-service:8082
             KEYCLOAK_ISSUER_URI: http://localhost:8180/realms/erofivan
             KEYCLOAK_JWK_SET_URI: http://keycloak:8080/realms/erofivan/protocol/openid-connect/certs
@@ -35,7 +35,7 @@ services:
             DB_USERNAME: test
             DB_PASSWORD: test
             KAFKA_BOOTSTRAP_SERVERS: kafka:9092
-            OTEL_EXPORTER_OTLP_ENDPOINT: http://otel-collector:4318/v1/traces
+            OTEL_EXPORTER_OTLP_ENDPOINT: http://otel-collector:4318
             KEYCLOAK_ISSUER_URI: http://localhost:8180/realms/erofivan
             KEYCLOAK_JWK_SET_URI: http://keycloak:8080/realms/erofivan/protocol/openid-connect/certs
         depends_on:

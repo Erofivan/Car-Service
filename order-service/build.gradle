@@ -30,8 +30,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
-    implementation 'io.micrometer:micrometer-tracing-bridge-otel'
-    runtimeOnly 'io.opentelemetry:opentelemetry-exporter-otlp'
+    implementation 'io.opentelemetry.instrumentation:opentelemetry-spring-boot-starter:2.13.0'
     runtimeOnly 'io.micrometer:micrometer-registry-prometheus'
     implementation 'org.liquibase:liquibase-core'
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.6'
@@ -78,6 +77,14 @@ idea {
         testResources.from sourceSets.test.resources.srcDirs
         testSources.from sourceSets.integrationTest.java.srcDirs
         testResources.from sourceSets.integrationTest.resources.srcDirs
+    }
+}
+
+graalvmNative {
+    binaries {
+        main {
+            buildArgs.add('--initialize-at-run-time=io.opentelemetry.sdk.autoconfigure')
+        }
     }
 }
 

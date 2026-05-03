@@ -1,0 +1,10 @@
+services:
+    order-service:
+        build:
+            context: .
+            dockerfile: order-service/Dockerfile.native
+
+    storage-service:
+        build:
+            context: .
+            dockerfile: storage-service/Dockerfile.native
