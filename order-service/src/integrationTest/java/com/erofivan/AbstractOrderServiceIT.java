@@ -18,6 +18,8 @@ import org.springframework.test.web.servlet.MockMvc;
     "orders.inventory.cancelled",
     "orders.custom.warehouse-approved"
 })
+@Sql(scripts = "/db/cleanup-test-users.sql",
+    executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 @Sql(scripts = "/db/seed-test-users.sql",
     executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 @Sql(scripts = "/db/cleanup-test-users.sql",
