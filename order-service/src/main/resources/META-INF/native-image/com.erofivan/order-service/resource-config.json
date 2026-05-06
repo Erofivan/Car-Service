@@ -111,6 +111,9 @@
       },
       {
         "pattern": "META-INF/services/liquibase\\..*"
+      },
+      {
+        "pattern": "META-INF/services/io.opentelemetry\\..*"
       }
     ]
   }
