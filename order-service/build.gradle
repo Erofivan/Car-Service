@@ -88,6 +88,10 @@ graalvmNative {
     }
 }
 
+tasks.named('bootJar') {
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+}
+
 hibernate {
     enhancement {
         lazyInitialization = true
