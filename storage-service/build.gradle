@@ -2,6 +2,7 @@ plugins {
     id 'org.springframework.boot'
     id 'io.spring.dependency-management'
     id 'org.graalvm.buildtools.native'
+    id 'org.hibernate.orm' version '6.6.11.Final'
     id 'idea'
 }
 
@@ -30,7 +31,8 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
-    implementation 'io.opentelemetry.instrumentation:opentelemetry-spring-boot-starter:2.13.0'
+    implementation 'io.micrometer:micrometer-tracing-bridge-otel'
+    runtimeOnly 'io.opentelemetry:opentelemetry-exporter-otlp'
     runtimeOnly 'io.micrometer:micrometer-registry-prometheus'
     implementation 'org.liquibase:liquibase-core'
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.6'
@@ -81,10 +83,15 @@ idea {
 }
 
 graalvmNative {
-    binaries {
-        main {
-            buildArgs.add('--initialize-at-run-time=io.opentelemetry.sdk.autoconfigure')
-        }
+    metadataRepository {
+        enabled = true
+    }
+}
+
+hibernate {
+    enhancement {
+        lazyInitialization = true
+        dirtyTracking = true
     }
 }
 

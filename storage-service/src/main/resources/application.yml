@@ -57,18 +57,6 @@ management:
         web:
             exposure:
                 include: health,info,prometheus
-
-otel:
-    exporter:
-        otlp:
-            endpoint: ${OTEL_EXPORTER_OTLP_ENDPOINT:http://localhost:4318}
-    propagators: tracecontext,baggage
-    instrumentation:
-        spring-web:
-            enabled: true
-        spring-webmvc:
-            enabled: true
-        kafka:
-            enabled: true
-        jdbc:
-            enabled: true
+    otlp:
+        tracing:
+            endpoint: ${OTEL_EXPORTER_OTLP_ENDPOINT:http://localhost:4318}/v1/traces

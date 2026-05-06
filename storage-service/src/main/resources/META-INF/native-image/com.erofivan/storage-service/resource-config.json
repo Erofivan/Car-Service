@@ -1,0 +1,117 @@
+{
+  "resources": {
+    "includes": [
+      {
+        "pattern": "META-INF/services/liquibase.change.Change"
+      },
+      {
+        "pattern": "META-INF/services/liquibase.changelog.ChangeLogHistoryService"
+      },
+      {
+        "pattern": "META-INF/services/liquibase.changelog.visitor.ValidatingVisitorGenerator"
+      },
+      {
+        "pattern": "META-INF/services/liquibase.changeset.ChangeSetService"
+      },
+      {
+        "pattern": "META-INF/services/liquibase.command.CommandStep"
+      },
+      {
+        "pattern": "META-INF/services/liquibase.command.LiquibaseCommand"
+      },
+      {
+        "pattern": "META-INF/services/liquibase.configuration.AutoloadedConfigurations"
+      },
+      {
+        "pattern": "META-INF/services/liquibase.configuration.ConfigurationValueProvider"
+      },
+      {
+        "pattern": "META-INF/services/liquibase.database.Database"
+      },
+      {
+        "pattern": "META-INF/services/liquibase.database.DatabaseConnection"
+      },
+      {
+        "pattern": "META-INF/services/liquibase.database.LiquibaseTableNames"
+      },
+      {
+        "pattern": "META-INF/services/liquibase.database.jvm.ConnectionPatterns"
+      },
+      {
+        "pattern": "META-INF/services/liquibase.datatype.LiquibaseDataType"
+      },
+      {
+        "pattern": "META-INF/services/liquibase.diff.DiffGenerator"
+      },
+      {
+        "pattern": "META-INF/services/liquibase.diff.compare.DatabaseObjectComparator"
+      },
+      {
+        "pattern": "META-INF/services/liquibase.diff.output.changelog.ChangeGenerator"
+      },
+      {
+        "pattern": "META-INF/services/liquibase.executor.Executor"
+      },
+      {
+        "pattern": "META-INF/services/liquibase.io.OutputFileHandler"
+      },
+      {
+        "pattern": "META-INF/services/liquibase.license.LicenseService"
+      },
+      {
+        "pattern": "META-INF/services/liquibase.lockservice.LockService"
+      },
+      {
+        "pattern": "META-INF/services/liquibase.logging.LogService"
+      },
+      {
+        "pattern": "META-INF/services/liquibase.logging.mdc.CustomMdcObject"
+      },
+      {
+        "pattern": "META-INF/services/liquibase.logging.mdc.MdcManager"
+      },
+      {
+        "pattern": "META-INF/services/liquibase.parser.ChangeLogParser"
+      },
+      {
+        "pattern": "META-INF/services/liquibase.parser.LiquibaseSqlParser"
+      },
+      {
+        "pattern": "META-INF/services/liquibase.parser.NamespaceDetails"
+      },
+      {
+        "pattern": "META-INF/services/liquibase.parser.SnapshotParser"
+      },
+      {
+        "pattern": "META-INF/services/liquibase.precondition.Precondition"
+      },
+      {
+        "pattern": "META-INF/services/liquibase.report.ShowSummaryGenerator"
+      },
+      {
+        "pattern": "META-INF/services/liquibase.resource.PathHandler"
+      },
+      {
+        "pattern": "META-INF/services/liquibase.serializer.ChangeLogSerializer"
+      },
+      {
+        "pattern": "META-INF/services/liquibase.serializer.SnapshotSerializer"
+      },
+      {
+        "pattern": "META-INF/services/liquibase.servicelocator.ServiceLocator"
+      },
+      {
+        "pattern": "META-INF/services/liquibase.snapshot.SnapshotGenerator"
+      },
+      {
+        "pattern": "META-INF/services/liquibase.sqlgenerator.SqlGenerator"
+      },
+      {
+        "pattern": "META-INF/services/liquibase.structure.DatabaseObject"
+      },
+      {
+        "pattern": "META-INF/services/liquibase\\..*"
+      }
+    ]
+  }
+}
