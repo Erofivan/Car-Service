@@ -4,6 +4,8 @@ import com.erofivan.domain.models.OutboxEventEntity;
 import com.erofivan.infrastructure.persistence.jpa.repositories.OutboxEventRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.opentelemetry.api.trace.Span;
+import io.opentelemetry.api.trace.SpanContext;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -27,6 +29,12 @@ public class OutboxEventService {
             outboxEvent.setTopic(topic);
             outboxEvent.setAggregateId(aggregateId);
             outboxEvent.setPayload(payload);
+
+            SpanContext spanContext = Span.current().getSpanContext();
+            if (spanContext.isValid()) {
+                outboxEvent.setTraceId(spanContext.getTraceId());
+                outboxEvent.setSpanId(spanContext.getSpanId());
+            }
 
             outboxEventRepository.save(outboxEvent);
         } catch (JsonProcessingException e) {

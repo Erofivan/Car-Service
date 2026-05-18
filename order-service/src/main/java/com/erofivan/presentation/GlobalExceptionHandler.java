@@ -3,6 +3,7 @@ package com.erofivan.presentation;
 import com.erofivan.domain.exceptions.DomainValidationException;
 import com.erofivan.domain.exceptions.EntityNotFoundException;
 import com.erofivan.domain.exceptions.IncompatibleComponentException;
+import com.erofivan.domain.exceptions.StorageServiceUnavailableException;
 import org.jspecify.annotations.NonNull;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
@@ -47,5 +48,10 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(AccessDeniedException.class)
     public ProblemDetail handleAccessDenied(@NonNull AccessDeniedException ex) {
         return ProblemDetail.forStatusAndDetail(HttpStatus.FORBIDDEN, ex.getMessage());
+    }
+
+    @ExceptionHandler(StorageServiceUnavailableException.class)
+    public ProblemDetail handleStorageUnavailable(@NonNull StorageServiceUnavailableException ex) {
+        return ProblemDetail.forStatusAndDetail(HttpStatus.SERVICE_UNAVAILABLE, ex.getMessage());
     }
 }

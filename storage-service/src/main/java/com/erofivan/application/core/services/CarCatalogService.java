@@ -10,6 +10,7 @@ import com.erofivan.presentation.dtos.responses.CarAvailabilityResponse;
 import com.erofivan.presentation.dtos.responses.CarResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -27,6 +28,23 @@ public class CarCatalogService implements CarService {
             .filter(carEntity -> !carEntity.isRemoved())
             .orElseThrow(() -> new EntityNotFoundException("Car", carId.toString()));
         return carMapper.toResponse(car);
+    }
+
+    public CarResponse getAvailableCarById(UUID carId) {
+        CarEntity car = carRepository.findById(carId)
+            .filter(carEntity -> !carEntity.isRemoved() && carEntity.isAvailable())
+            .orElseThrow(() -> new EntityNotFoundException("Car", carId.toString()));
+        return carMapper.toResponse(car);
+    }
+
+    public List<CarResponse> getAvailableCars() {
+        Specification<CarEntity> availableCarsSpec = Specification.where(CarJpaSpecifications.notRemoved())
+            .and(CarJpaSpecifications.isAvailable());
+
+        return carRepository.findAll(availableCarsSpec)
+            .stream()
+            .map(carMapper::toResponse)
+            .toList();
     }
 
     public List<CarResponse> getCars(

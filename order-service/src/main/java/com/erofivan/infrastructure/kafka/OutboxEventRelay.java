@@ -2,6 +2,12 @@ package com.erofivan.infrastructure.kafka;
 
 import com.erofivan.domain.models.OutboxEventEntity;
 import com.erofivan.infrastructure.persistence.jpa.repositories.OutboxEventRepository;
+import io.opentelemetry.api.trace.Span;
+import io.opentelemetry.api.trace.SpanContext;
+import io.opentelemetry.api.trace.TraceFlags;
+import io.opentelemetry.api.trace.TraceState;
+import io.opentelemetry.context.Context;
+import io.opentelemetry.context.Scope;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.core.KafkaTemplate;
@@ -30,11 +36,13 @@ public class OutboxEventRelay {
 
         for (OutboxEventEntity event : events) {
             try {
-                kafkaTemplate.send(
-                    event.getTopic(),
-                    event.getId().toString(),
-                    event.getPayload()
-                );
+                try (Scope ignored = traceContextFor(event).makeCurrent()) {
+                    kafkaTemplate.send(
+                        event.getTopic(),
+                        event.getId().toString(),
+                        event.getPayload()
+                    );
+                }
                 
                 event.setPublishedAt(Instant.now(UTC_CLOCK));
                 outboxEventRepository.save(event);
@@ -42,5 +50,20 @@ public class OutboxEventRelay {
                 log.error("Failed to relay outbox event {}: {}", event.getId(), e.getMessage());
             }
         }
+    }
+
+    private Context traceContextFor(OutboxEventEntity event) {
+        if (event.getTraceId() == null || event.getSpanId() == null) {
+            return Context.current();
+        }
+
+        SpanContext spanContext = SpanContext.createFromRemoteParent(
+            event.getTraceId(),
+            event.getSpanId(),
+            TraceFlags.getSampled(),
+            TraceState.getDefault()
+        );
+
+        return Context.current().with(Span.wrap(spanContext));
     }
 }

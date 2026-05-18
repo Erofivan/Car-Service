@@ -13,6 +13,9 @@ services:
             KAFKA_BOOTSTRAP_SERVERS: kafka:9092
             OTEL_EXPORTER_OTLP_ENDPOINT: http://otel-collector:4318
             STORAGE_SERVICE_BASE_URL: http://storage-service:8082
+            STORAGE_GRPC_HOST: storage-service
+            STORAGE_GRPC_PORT: 9090
+            STORAGE_GRPC_TIMEOUT_MS: 2000
             KEYCLOAK_ISSUER_URI: http://localhost:8180/realms/erofivan
             KEYCLOAK_JWK_SET_URI: http://keycloak:8080/realms/erofivan/protocol/openid-connect/certs
         depends_on:
@@ -31,6 +34,7 @@ services:
             - "8082:8082"
         environment:
             SERVER_PORT: 8082
+            GRPC_SERVER_PORT: 9090
             DB_URL: jdbc:postgresql://storage-db:5432/storage_db
             DB_USERNAME: test
             DB_PASSWORD: test
@@ -92,15 +96,15 @@ services:
             retries: 5
 
     keycloak:
-        image: quay.io/keycloak/keycloak:26.0
+        build:
+            context: ./keycloak
+            dockerfile: Dockerfile
         command: start-dev --import-realm
         ports:
             - "8180:8080"
         environment:
             KC_BOOTSTRAP_ADMIN_USERNAME: ${KC_BOOTSTRAP_ADMIN_USERNAME}
             KC_BOOTSTRAP_ADMIN_PASSWORD: ${KC_BOOTSTRAP_ADMIN_PASSWORD}
-        volumes:
-            - ./keycloak/realm-export.json:/opt/keycloak/data/import/realm-export.json
         healthcheck:
             test: [ "CMD-SHELL", "bash -lc \"exec 3<>/dev/tcp/127.0.0.1/8080; printf 'GET /realms/master/.well-known/openid-configuration HTTP/1.1\\r\\nHost: localhost\\r\\nConnection: close\\r\\n\\r\\n' >&3; grep -q '200' <&3\"" ]
             interval: 10s

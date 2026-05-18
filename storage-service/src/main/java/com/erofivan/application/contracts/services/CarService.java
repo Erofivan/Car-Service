@@ -9,6 +9,10 @@ import java.util.UUID;
 public interface CarService {
     CarResponse getCarById(UUID carId);
 
+    CarResponse getAvailableCarById(UUID carId);
+
+    List<CarResponse> getAvailableCars();
+
     List<CarResponse> getCars(
         String brandCode,
         String modelCode,

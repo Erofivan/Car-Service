@@ -45,6 +45,10 @@ springdoc:
 server:
     port: ${SERVER_PORT:8082}
 
+grpc:
+    server:
+        port: ${GRPC_SERVER_PORT:9090}
+
 logging:
     level:
         org.hibernate.SQL: info

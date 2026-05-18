@@ -1,0 +1,41 @@
+syntax = "proto3";
+
+package com.erofivan.contracts.grpc.cars;
+
+option java_multiple_files = true;
+option java_package = "com.erofivan.contracts.grpc.cars";
+option java_outer_classname = "AvailableCarsProto";
+
+service StorageCarsService {
+  rpc ListAvailableCars(ListAvailableCarsRequest) returns (ListAvailableCarsResponse);
+  rpc GetAvailableCarById(GetAvailableCarByIdRequest) returns (AvailableCar);
+}
+
+message ListAvailableCarsRequest {
+}
+
+message ListAvailableCarsResponse {
+  repeated AvailableCar cars = 1;
+}
+
+message GetAvailableCarByIdRequest {
+  string id = 1;
+}
+
+message AvailableCar {
+  string id = 1;
+  string brand = 2;
+  string brand_code = 3;
+  string model = 4;
+  string model_code = 5;
+  string body_type = 6;
+  string fuel_type = 7;
+  int32 power_hp = 8;
+  double engine_litres = 9;
+  string transmission = 10;
+  string drivetrain = 11;
+  string color = 12;
+  int64 price = 13;
+  bool available = 14;
+  bool test_drive_enabled = 15;
+}

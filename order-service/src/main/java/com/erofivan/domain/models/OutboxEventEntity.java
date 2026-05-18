@@ -42,6 +42,12 @@ public class OutboxEventEntity {
     @Column
     private Instant publishedAt;
 
+    @Column(length = 64)
+    private String traceId;
+
+    @Column(length = 32)
+    private String spanId;
+
     @PrePersist
     private void onCreate() {
         this.createdAt = Instant.now();

@@ -37,6 +37,7 @@ dependencies {
     implementation 'org.liquibase:liquibase-core'
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.6'
     implementation 'org.springframework.kafka:spring-kafka'
+    implementation 'io.grpc:grpc-okhttp:1.65.1'
 
     implementation 'org.mapstruct:mapstruct:1.6.3'
     annotationProcessor 'org.mapstruct:mapstruct-processor:1.6.3'
@@ -55,6 +56,7 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-testcontainers'
     testImplementation 'org.springframework.security:spring-security-test'
     testImplementation 'org.springframework.kafka:spring-kafka-test'
+    testImplementation 'io.grpc:grpc-inprocess:1.65.1'
     testCompileOnly 'org.projectlombok:lombok:1.18.36'
     testCompileOnly 'org.jspecify:jspecify:1.0.0'
     testAnnotationProcessor 'org.projectlombok:lombok:1.18.36'
@@ -85,6 +87,13 @@ idea {
 graalvmNative {
     metadataRepository {
         enabled = true
+    }
+    binaries {
+        main {
+            javaLauncher = javaToolchains.launcherFor {
+                languageVersion = JavaLanguageVersion.of(21)
+            }
+        }
     }
 }
 

@@ -17,6 +17,11 @@ public final class CarJpaSpecifications {
     }
 
     @Contract(pure = true)
+    public static @NonNull Specification<CarEntity> isAvailable() {
+        return (root, query, cb) -> cb.isTrue(root.get("available"));
+    }
+
+    @Contract(pure = true)
     public static @NonNull Specification<CarEntity> hasBrandCode(String brandCode) {
         return (root, query, cb) -> {
             if (brandCode == null || brandCode.isBlank()) {

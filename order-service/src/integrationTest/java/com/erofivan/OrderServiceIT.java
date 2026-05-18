@@ -1,5 +1,8 @@
 package com.erofivan;
 
+import com.erofivan.domain.exceptions.EntityNotFoundException;
+import com.erofivan.domain.exceptions.StorageServiceUnavailableException;
+import com.erofivan.presentation.dtos.responses.AvailableCarResponse;
 import com.erofivan.presentation.dtos.responses.CarAvailabilityResponse;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
@@ -22,6 +25,56 @@ class OrderServiceIT extends AbstractOrderServiceIT {
     private static final UUID CLIENT_ID  = UUID.fromString("50000000-0000-0000-0000-000000000001");
     private static final UUID MANAGER_ID = UUID.fromString("50000000-0000-0000-0000-000000000002");
     private static final UUID CAR_ID = UUID.randomUUID();
+
+    @Test
+    void getAvailableCarsReturns200ForUserRole() throws Exception {
+        when(storageServiceClient.getAvailableCars())
+            .thenReturn(List.of(availableCarResponse(CAR_ID, true)));
+
+        mockMvc.perform(get("/api/v1/cars").with(userJwt(CLIENT_ID)))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$[0].id").value(CAR_ID.toString()))
+            .andExpect(jsonPath("$[0].available").value(true));
+    }
+
+    @Test
+    void getAvailableCarByIdReturns200ForManagerRole() throws Exception {
+        when(storageServiceClient.getAvailableCarById(CAR_ID))
+            .thenReturn(availableCarResponse(CAR_ID, true));
+
+        mockMvc.perform(get("/api/v1/cars/{id}", CAR_ID).with(managerJwt(MANAGER_ID)))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.id").value(CAR_ID.toString()))
+            .andExpect(jsonPath("$.available").value(true));
+    }
+
+    @Test
+    void getAvailableCarsReturns403ForWarehouseAdminRole() throws Exception {
+        mockMvc.perform(get("/api/v1/cars").with(warehouseJwt(CLIENT_ID)))
+            .andExpect(status().isForbidden());
+    }
+
+    @Test
+    void getAvailableCarsReturns503WhenStorageUnavailable() throws Exception {
+        when(storageServiceClient.getAvailableCars())
+            .thenThrow(new StorageServiceUnavailableException(
+                "Storage service is temporarily unavailable"
+            ));
+
+        mockMvc.perform(get("/api/v1/cars").with(userJwt(CLIENT_ID)))
+            .andExpect(status().isServiceUnavailable())
+            .andExpect(jsonPath("$.detail")
+                .value("Storage service is temporarily unavailable"));
+    }
+
+    @Test
+    void getAvailableCarByIdReturns404WhenNotFound() throws Exception {
+        when(storageServiceClient.getAvailableCarById(CAR_ID))
+            .thenThrow(new EntityNotFoundException("Car", CAR_ID.toString()));
+
+        mockMvc.perform(get("/api/v1/cars/{id}", CAR_ID).with(userJwt(CLIENT_ID)))
+            .andExpect(status().isNotFound());
+    }
 
     @Test
     void getInventoryOrdersReturns200() throws Exception {
@@ -143,5 +196,30 @@ class OrderServiceIT extends AbstractOrderServiceIT {
     private RequestPostProcessor managerJwt(UUID userId) {
         return jwt().authorities(new SimpleGrantedAuthority("ROLE_MANAGER"))
             .jwt(j -> j.subject(userId.toString()));
+    }
+
+    private RequestPostProcessor warehouseJwt(UUID userId) {
+        return jwt().authorities(new SimpleGrantedAuthority("ROLE_WAREHOUSE_ADMIN"))
+            .jwt(j -> j.subject(userId.toString()));
+    }
+
+    private AvailableCarResponse availableCarResponse(UUID carId, boolean testDriveEnabled) {
+        return new AvailableCarResponse(
+            carId,
+            "BMW",
+            "BMW",
+            "320i",
+            "BMW-320I",
+            "Sedan",
+            "Petrol",
+            184,
+            2.0,
+            "Automatic 8AT",
+            "Rear",
+            "Black",
+            4200000L,
+            true,
+            testDriveEnabled
+        );
     }
 }

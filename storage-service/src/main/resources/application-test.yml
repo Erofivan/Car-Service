@@ -18,3 +18,7 @@ spring:
                 jwt:
                     issuer-uri: http://localhost:8180/realms/erofivan
                     jwk-set-uri: http://localhost:8180/realms/erofivan/protocol/openid-connect/certs
+
+grpc:
+    server:
+        port: 0

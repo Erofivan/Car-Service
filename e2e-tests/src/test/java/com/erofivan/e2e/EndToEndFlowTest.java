@@ -48,6 +48,11 @@ class EndToEndFlowTest {
             userToken,
             Duration.ofSeconds(90)
         );
+        waitForAuthorizedGet(
+            ORDER_SERVICE_URL + "/api/v1/cars",
+            userToken,
+            Duration.ofSeconds(90)
+        );
     }
 
     private static String waitForToken(String username, Duration timeout) {
@@ -230,5 +235,28 @@ class EndToEndFlowTest {
         Assertions.assertEquals(404, statusCode);
         String detail = placeResponse.path("detail");
         Assertions.assertTrue(detail != null && detail.contains("Client with id"));
+    }
+
+    @Test
+    @Order(5)
+    void userCanReadAvailableCarsThroughOrderService() {
+        List<Map<String, Object>> cars = givenAuthorized(userToken)
+            .when()
+            .get(ORDER_SERVICE_URL + "/api/v1/cars")
+            .then()
+            .statusCode(200)
+            .extract()
+            .jsonPath()
+            .getList("$");
+
+        Assertions.assertFalse(cars.isEmpty());
+
+        String firstCarId = (String) cars.getFirst().get("id");
+
+        givenAuthorized(userToken)
+            .when()
+            .get(ORDER_SERVICE_URL + "/api/v1/cars/{id}", firstCarId)
+            .then()
+            .statusCode(200);
     }
 }

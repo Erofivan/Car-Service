@@ -1,5 +1,6 @@
 plugins {
-    id 'java'
+    id 'java-library'
+    id 'com.google.protobuf' version '0.9.4'
 }
 
 group = 'com.erofivan'
@@ -16,6 +17,29 @@ repositories {
 }
 
 dependencies {
+    api 'io.grpc:grpc-protobuf:1.65.1'
+    api 'io.grpc:grpc-stub:1.65.1'
+    api 'com.google.protobuf:protobuf-java:3.25.3'
+
+    compileOnly 'org.apache.tomcat:annotations-api:6.0.53'
     compileOnly 'org.projectlombok:lombok:1.18.36'
     annotationProcessor 'org.projectlombok:lombok:1.18.36'
+}
+
+protobuf {
+    protoc {
+        artifact = 'com.google.protobuf:protoc:3.25.3'
+    }
+    plugins {
+        grpc {
+            artifact = 'io.grpc:protoc-gen-grpc-java:1.65.1'
+        }
+    }
+    generateProtoTasks {
+        all().configureEach {
+            plugins {
+                grpc {}
+            }
+        }
+    }
 }

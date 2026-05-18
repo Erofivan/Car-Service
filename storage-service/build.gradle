@@ -37,6 +37,7 @@ dependencies {
     implementation 'org.liquibase:liquibase-core'
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.6'
     implementation 'org.springframework.kafka:spring-kafka'
+    implementation 'io.grpc:grpc-netty-shaded:1.65.1'
 
     implementation 'org.mapstruct:mapstruct:1.6.3'
     annotationProcessor 'org.mapstruct:mapstruct-processor:1.6.3'
@@ -85,6 +86,13 @@ idea {
 graalvmNative {
     metadataRepository {
         enabled = true
+    }
+    binaries {
+        main {
+            javaLauncher = javaToolchains.launcherFor {
+                languageVersion = JavaLanguageVersion.of(21)
+            }
+        }
     }
 }
 
