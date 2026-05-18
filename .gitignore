@@ -43,3 +43,4 @@ bin/
 *.puml
 ## GraalVM native-image configs
 **/META-INF/native-image/
+**/META-INF/native-image/com.erofivan/order-service/reflect-config.json
